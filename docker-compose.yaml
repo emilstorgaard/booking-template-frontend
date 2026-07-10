@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: booking-template-frontend
+    ports:
+      - '5003:3000'
+    restart: unless-stopped
