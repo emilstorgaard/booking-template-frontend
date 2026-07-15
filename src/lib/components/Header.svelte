@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import LoginModal from '$lib/components/LoginModal.svelte';
 	import RegisterModal from '$lib/components/RegisterModal.svelte';
 	import { userStore, hasRole } from '$lib/stores/auth';
@@ -28,6 +29,7 @@
 	async function handleLogout() {
 		try {
 			await logout();
+			await goto('/');
 		} catch (error: any) {
 			triggerToast(error.message, 'error');
 		}
