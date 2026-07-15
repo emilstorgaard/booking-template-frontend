@@ -1,8 +1,37 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import LoginModal from '$lib/components/LoginModal.svelte';
+	import RegisterModal from '$lib/components/RegisterModal.svelte';
+	import { userStore, hasRole } from '$lib/stores/auth';
+	import { logout } from '$lib/utils/auth';
+	import { triggerToast } from '$lib/stores/toastStore';
 
-	let isMenuOpen: boolean = $state(false);
-	let headerEl: HTMLElement | null = null;
+	let isMenuOpen = $state(false);
+	let headerEl = $state<HTMLElement | null>(null);
+
+	let activeModal = $state<'login' | 'register' | null>(null);
+
+	function openLoginModal() {
+		isMenuOpen = false;
+		activeModal = 'login';
+	}
+
+	function openRegisterModal() {
+		isMenuOpen = false;
+		activeModal = 'register';
+	}
+
+	function closeModal() {
+		activeModal = null;
+	}
+
+	async function handleLogout() {
+		try {
+			await logout();
+		} catch (error: any) {
+			triggerToast(error.message, 'error');
+		}
+	}
 
 	onMount(() => {
 		const handlePointerDown = (event: PointerEvent) => {
@@ -30,7 +59,7 @@
 
 <header
 	bind:this={headerEl}
-	class={`relative z-50 border-b border-white/20 bg-white/80 shadow-sm backdrop-blur-md transition-all`}
+	class="relative z-50 border-b border-white/20 bg-white/80 shadow-sm backdrop-blur-md transition-all"
 >
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="flex h-20 items-center justify-between sm:h-24 md:h-28 lg:h-32">
@@ -65,7 +94,7 @@
 
 			<nav class="hidden items-center gap-1 xl:flex">
 				<a
-					href=/#
+					href="/#"
 					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-60 text-gray-600"
 				>
 					Om
@@ -74,8 +103,42 @@
 					></span>
 				</a>
 
+				{#if $userStore && hasRole($userStore, 'Admin')}
+					<a
+						href="/admin"
+						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
+					>
+						Admin
+					</a>
+				{/if}
+
+				{#if !$userStore}
+					<button
+						title="Login"
+						onclick={openLoginModal}
+						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
+					>
+						Log in
+					</button>
+					<button
+						title="Opret bruger"
+						onclick={openRegisterModal}
+						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
+					>
+						Opret bruger
+					</button>
+				{:else}
+					<button
+						title="Logout"
+						onclick={handleLogout}
+						class="block w-full text-left px-4 py-2 text-sm text-light-gray hover:text-white hover:bg-red-600 rounded transition duration-200"
+					>
+						Log out
+					</button>
+				{/if}
+
 				<a
-					href=/#
+					href="/#"
 					class="ml-4 rounded-full px-6 py-3 text-base font-semibold text-black shadow-md shadow-brand-500/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-500/30 bg-brand-500 hover:bg-brand-400"
 				>
 					Kontakt
@@ -116,7 +179,7 @@
 			<div class="mx-auto max-w-7xl px-4 py-3">
 				<div class="mt-3 border-t border-gray-100 pt-3">
 					<a
-						href=/#
+						href="/#"
 						onclick={() => (isMenuOpen = false)}
 						class="block w-full rounded-full py-3 text-center font-semibold text-white transition bg-brand-500 hover:bg-brand-400"
 					>
@@ -125,16 +188,59 @@
 				</div>
 
 				<a
-					href=/#
+					href="/#"
 					onclick={() => (isMenuOpen = false)}
 					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600 text-gray-700"
 				>
-					<span
-						class="h-1.5 w-1.5 rounded-full transition-all bg-brand-400"
-					></span>
+					<span class="h-1.5 w-1.5 rounded-full transition-all bg-brand-400"></span>
 					Om
 				</a>
+
+				{#if $userStore && hasRole($userStore, 'Admin')}
+					<a
+						href="/admin"
+						onclick={() => (isMenuOpen = false)}
+						class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600 text-gray-700"
+					>
+						<span class="h-1.5 w-1.5 rounded-full transition-all bg-brand-400"></span>
+						Admin
+					</a>
+				{/if}
+
+				{#if !$userStore}
+					<button
+						title="Login"
+						onclick={openLoginModal}
+						class="mt-3 block w-full rounded-full bg-brand-500 py-3 text-center font-semibold text-black transition hover:bg-brand-400"
+					>
+						Log in
+					</button>
+					<button
+						title="Opret bruger"
+						onclick={openRegisterModal}
+						class="mt-3 block w-full rounded-full border border-brand-500 py-3 text-center font-semibold text-brand-600 transition hover:bg-brand-50"
+					>
+						Opret bruger
+					</button>
+				{:else}
+					<button
+						title="Logout"
+						onclick={() => {
+							isMenuOpen = false;
+							handleLogout();
+						}}
+						class="mt-3 block w-full rounded-full bg-red-600 py-3 text-center font-semibold text-white transition hover:bg-red-500"
+					>
+						Log out
+					</button>
+				{/if}
 			</div>
 		</nav>
 	{/if}
 </header>
+
+{#if activeModal === 'login'}
+	<LoginModal onclose={closeModal} onSwitchToRegister={openRegisterModal} />
+{:else if activeModal === 'register'}
+	<RegisterModal onclose={closeModal} onSwitchToLogin={openLoginModal} />
+{/if}

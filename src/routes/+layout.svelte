@@ -3,9 +3,16 @@
 	import { onMount } from 'svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
-	let { children } = $props();
+	import Toast from '$lib/components/Toast.svelte';
+	import { userStore } from '$lib/stores/auth';
+
+	let { children, data } = $props();
 
 	let stickyEl: HTMLDivElement;
+
+	$effect(() => {
+		userStore.set(data.loggedInUser);
+	});
 
 	onMount(() => {
 		const updateHeight = () => {
@@ -32,10 +39,11 @@
 	<div bind:this={stickyEl} class="sticky top-0 z-50">
 		<Header />
 	</div>
-	
+
 	<main class="font-nunito flex-1">
 		{@render children()}
 	</main>
 
 	<Footer />
+	<Toast />
 </div>

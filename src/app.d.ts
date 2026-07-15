@@ -3,6 +3,15 @@
 declare global {
 	namespace App {
 		// interface Error {}
+		interface Locals {
+			user?: {
+				uid: string;
+				email: string;
+				roles: string[];
+				jwt: string;
+			};
+		}
+
 		// interface Locals {}
 		// interface PageData {}
 		// interface PageState {}
@@ -10,4 +19,4 @@ declare global {
 	}
 }
 
-export {};
+export { };
