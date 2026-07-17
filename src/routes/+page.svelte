@@ -1,6 +1,13 @@
 <script lang="ts">
+	import SeoHead from '$lib/components/SeoHead.svelte';
 	import { userStore } from '$lib/stores/auth';
+
+	let { data } = $props();
+
+	const p = $derived(data.page.properties);
 </script>
+
+<SeoHead seo={p} />
 
 <div>
 	Velkommen til
@@ -13,4 +20,6 @@
 	{:else}
 		Du er ikke logget ind.
 	{/if}
+
+	<p>{p.title}</p>
 </div>
