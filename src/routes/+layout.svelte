@@ -40,7 +40,7 @@
 		<Header />
 	</div>
 
-	<main class="font-nunito flex-1">
+	<main class="flex-1">
 		{@render children()}
 	</main>
 

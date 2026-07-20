@@ -64,6 +64,7 @@
 			triggerToast(`Du har booket tiden ${formatTime(slot.startTimeUtc)}.`, 'success');
 			await loadData();
 		} catch (err) {
+			// Backend returnerer 409 hvis en anden bruger nåede tiden først
 			triggerToast(err instanceof Error ? err.message : 'Kunne ikke booke tiden.', 'error');
 		} finally {
 			pendingId = null;
@@ -96,7 +97,7 @@
 	onMount(loadData);
 
 	$effect(() => {
-		$userStore;
+		$userStore; // registrerer afhængigheden
 		loadMyBookings();
 	});
 </script>
@@ -107,6 +108,7 @@
 	<h1 class="text-3xl font-semibold text-slate-900 sm:text-4xl">Book en tid</h1>
 	<p class="mt-2 text-slate-500">Vælg en markeret dag i kalenderen for at se ledige tider.</p>
 
+	<!-- MINE BOOKINGER (kun for indloggede) -->
 	{#if $userStore && myBookings.length > 0}
 		<section class="mt-10">
 			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Mine bookinger</h2>

@@ -70,7 +70,7 @@
 				class="group flex items-center gap-2 transition-opacity hover:opacity-90 sm:gap-3"
 			>
 				<img
-					src="logo.png"
+					src="/logo.png"
 					sizes="96px"
 					alt="logo"
 					fetchpriority="high"
@@ -97,12 +97,19 @@
 			<nav class="hidden items-center gap-1 xl:flex">
 				<a
 					href="/#"
-					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-60 text-gray-600"
+					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600 text-gray-600"
 				>
 					Om
 					<span
 						class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300 w-0 group-hover:w-4/5"
 					></span>
+				</a>
+
+				<a
+					href="/book"
+					class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
+				>
+					Book tid
 				</a>
 
 				{#if $userStore && hasRole($userStore, 'Admin')}
@@ -116,11 +123,11 @@
 
 				{#if !$userStore}
 					<button
-						title="Login"
+						title="Log ind"
 						onclick={openLoginModal}
 						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
 					>
-						Log in
+						Log ind
 					</button>
 					<button
 						title="Opret bruger"
@@ -131,11 +138,11 @@
 					</button>
 				{:else}
 					<button
-						title="Logout"
+						title="Log ud"
 						onclick={handleLogout}
-						class="block w-full text-left px-4 py-2 text-sm text-light-gray hover:text-white hover:bg-red-600 rounded transition duration-200"
+						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
 					>
-						Log out
+						Log ud
 					</button>
 				{/if}
 
@@ -198,6 +205,15 @@
 					Om
 				</a>
 
+				<a
+					href="/book"
+					onclick={() => (isMenuOpen = false)}
+					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600 text-gray-700"
+				>
+					<span class="h-1.5 w-1.5 rounded-full transition-all bg-brand-400"></span>
+					Book tid
+				</a>
+
 				{#if $userStore && hasRole($userStore, 'Admin')}
 					<a
 						href="/admin"
@@ -211,11 +227,11 @@
 
 				{#if !$userStore}
 					<button
-						title="Login"
+						title="Log ind"
 						onclick={openLoginModal}
-						class="mt-3 block w-full rounded-full bg-brand-500 py-3 text-center font-semibold text-black transition hover:bg-brand-400"
+						class="mt-3 block w-full rounded-full bg-brand-500 py-3 text-center font-semibold text-white transition hover:bg-brand-400"
 					>
-						Log in
+						Log ind
 					</button>
 					<button
 						title="Opret bruger"
@@ -226,14 +242,14 @@
 					</button>
 				{:else}
 					<button
-						title="Logout"
+						title="Log ud"
 						onclick={() => {
 							isMenuOpen = false;
 							handleLogout();
 						}}
 						class="mt-3 block w-full rounded-full bg-red-600 py-3 text-center font-semibold text-white transition hover:bg-red-500"
 					>
-						Log out
+						Log ud
 					</button>
 				{/if}
 			</div>
