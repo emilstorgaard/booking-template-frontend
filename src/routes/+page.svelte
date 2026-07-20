@@ -1,156 +1,206 @@
 <script lang="ts">
 	import SeoHead from '$lib/components/SeoHead.svelte';
 	import { userStore } from '$lib/stores/auth';
-	import { triggerToast } from '$lib/stores/toastStore';
 
 	let { data } = $props();
 
 	const p = $derived(data.page.properties);
 
-	import { onMount } from 'svelte';
-	import {
-		getAvailableSlots,
-		getMyBookings,
-		bookSlot,
-		cancelBooking,
-		type TimeSlot
-	} from '$lib/api/booking';
-	import BookingCalendar from '$lib/components/BookingCalendar.svelte';
-	import Spinner from '$lib/components/Spinner.svelte';
-
-	let availableSlots = $state<TimeSlot[]>([]);
-	let myBookings = $state<TimeSlot[]>([]);
-	let loading = $state(true);
-	let pendingId = $state<number | null>(null);
-
-	async function loadAvailableSlots() {
-		try {
-			availableSlots = await getAvailableSlots();
-		} catch (err) {
-			triggerToast(err instanceof Error ? err.message : 'Kunne ikke hente ledige tider.', 'error');
+	const steps = [
+		{
+			n: '01',
+			title: 'Vælg en dag',
+			text: 'Se de kommende uger i kalenderen, og find en dag der passer dig.'
+		},
+		{
+			n: '02',
+			title: 'Vælg et tidspunkt',
+			text: 'Klik på et af de ledige tidspunkter den dag – kun åbne tider vises.'
+		},
+		{
+			n: '03',
+			title: 'Bekræft',
+			text: 'Bekræft bookingen med ét klik. Du kan altid afbestille igen senere.'
 		}
-	}
+	];
 
-	async function loadMyBookings() {
-		if (!$userStore) {
-			myBookings = [];
-			return;
+	const features = [
+		{
+			title: 'Altid opdateret',
+			text: 'Kalenderen viser kun tider der reelt er ledige, lige nu.'
+		},
+		{
+			title: 'Bekræftelse med det samme',
+			text: 'Så snart du booker, er tiden din — ingen ventetid på svar.'
+		},
+		{
+			title: 'Nem afbestilling',
+			text: 'Fortryd eller flyt din tid selv, direkte fra din profil.'
 		}
-		try {
-			myBookings = await getMyBookings();
-		} catch (err) {
-			triggerToast(
-				err instanceof Error ? err.message : 'Kunne ikke hente dine bookinger.',
-				'error'
-			);
-		}
-	}
-
-	async function loadData() {
-		loading = true;
-		await Promise.all([loadAvailableSlots(), loadMyBookings()]);
-		loading = false;
-	}
-
-	async function handleBook(slot: TimeSlot) {
-		if (!$userStore) {
-			triggerToast('Du skal være logget ind for at booke en tid.', 'error');
-			return;
-		}
-
-		pendingId = slot.id;
-		try {
-			await bookSlot(slot.id);
-			triggerToast(`Du har booket tiden ${formatTime(slot.startTimeUtc)}.`, 'success');
-			await loadData();
-		} catch (err) {
-			triggerToast(err instanceof Error ? err.message : 'Kunne ikke booke tiden.', 'error');
-		} finally {
-			pendingId = null;
-		}
-	}
-
-	async function handleCancel(slot: TimeSlot) {
-		pendingId = slot.id;
-		try {
-			await cancelBooking(slot.id);
-			triggerToast('Din booking er aflyst.', 'success');
-			await loadData();
-		} catch (err) {
-			triggerToast(err instanceof Error ? err.message : 'Kunne ikke aflyse booking.', 'error');
-		} finally {
-			pendingId = null;
-		}
-	}
-
-	function formatTime(iso: string): string {
-		return new Date(iso).toLocaleString('da-DK', {
-			weekday: 'short',
-			day: 'numeric',
-			month: 'short',
-			hour: '2-digit',
-			minute: '2-digit'
-		});
-	}
-
-	onMount(loadData);
-
-	$effect(() => {
-		$userStore;
-		loadMyBookings();
-	});
+	];
 </script>
 
 <SeoHead seo={p} />
 
-<div class="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-	<h1 class="text-3xl font-semibold text-slate-900 sm:text-4xl">Book en tid</h1>
-	<p class="mt-2 text-slate-500">Vælg en markeret dag i kalenderen for at se ledige tider.</p>
+<div class="overflow-hidden">
+	<!-- HERO -->
+	<section class="relative bg-gradient-to-b from-tide/5 via-white to-white">
+		<div class="mx-auto max-w-3xl px-4 pt-16 pb-8 sm:pt-24 sm:pb-12">
+			<div class="flex flex-wrap items-center justify-between gap-3">
+				<span
+					class="inline-flex items-center gap-1.5 rounded-full bg-tide/10 px-3 py-1 text-xs font-medium tracking-wide text-tide uppercase"
+				>
+					<span class="h-1.5 w-1.5 rounded-full bg-tide"></span>
+					Booking
+				</span>
 
-	{#if $userStore && myBookings.length > 0}
-		<section class="mt-10">
-			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Mine bookinger</h2>
-			<ul class="mt-3 grid gap-2 sm:grid-cols-2">
-				{#each myBookings as slot (slot.id)}
-					<li
-						class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
-					>
-						<span class="text-sm text-slate-700">{formatTime(slot.startTimeUtc)}</span>
-						<button
-							class="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-500 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
-							disabled={pendingId === slot.id}
-							onclick={() => handleCancel(slot)}
-						>
-							{#if pendingId === slot.id}
-								<Spinner class="h-3.5 w-3.5" />
-							{/if}
-							{pendingId === slot.id ? 'Aflyser…' : 'Aflys'}
-						</button>
-					</li>
-				{/each}
-			</ul>
-		</section>
-	{/if}
+				{#if $userStore}
+					<span class="text-sm text-slate-500">
+						Logget ind som <strong class="font-medium text-slate-700">{$userStore.email}</strong>
+					</span>
+				{:else}
+					<a href="/login" class="text-sm font-medium text-slate-500 transition hover:text-tide">
+						Log ind →
+					</a>
+				{/if}
+			</div>
 
-	<section class="mt-10">
-		<div class="flex items-baseline justify-between">
-			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Ledige tider</h2>
-			{#if !$userStore}
-				<p class="text-xs text-slate-400">Log ind for at booke</p>
+			{#if p?.title}
+				<div class="font-display mt-6 text-4xl leading-tight font-semibold text-slate-900 sm:text-5xl">
+					{@html p.title}
+				</div>
+			{:else}
+				<h1 class="font-display mt-6 text-4xl leading-tight font-semibold text-slate-900 sm:text-5xl">
+					Find en tid, der<br class="hidden sm:block" /> passer dig.
+				</h1>
 			{/if}
+
+			<p class="mt-5 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
+				{p?.title ?? 'Se de ledige tider i kalenderen, og book på under et minut. Ingen opkald, ingen ventetid.'}
+			</p>
+
+			<div class="mt-8 flex flex-wrap items-center gap-4">
+				<a
+					href="/book"
+					class="inline-flex items-center gap-2 rounded-full bg-tide px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-tide/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tide"
+				>
+					Se ledige tider
+					<svg viewBox="0 0 16 16" class="h-3.5 w-3.5" fill="none" aria-hidden="true">
+						<path d="M2 8h11M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
+				</a>
+
+				{#if !$userStore}
+					<a href="/register" class="text-sm font-medium text-slate-500 transition hover:text-slate-800">
+						Opret en konto
+					</a>
+				{/if}
+			</div>
 		</div>
 
-		{#if loading}
-			<div class="mt-4 flex items-center gap-2 text-sm text-slate-500">
-				<Spinner class="h-4 w-4 text-brand-500" />
-				Henter tider…
+		<!-- SIGNATUR: bølgelinjen -->
+		<div class="wave-wrap relative h-16 sm:h-24" aria-hidden="true">
+			<div class="wave-track">
+				<svg viewBox="0 0 1440 100" preserveAspectRatio="none" class="h-full w-[200%]">
+					<path
+						d="M0,55 C120,20 240,90 360,55 C480,20 600,90 720,55 C840,20 960,90 1080,55 C1200,20 1320,90 1440,55 L1440,100 L0,100 Z M1440,55 C1560,20 1680,90 1800,55 C1920,20 2040,90 2160,55 C2280,20 2400,90 2520,55 C2640,20 2760,90 2880,55 L2880,100 L1440,100 Z"
+						class="fill-tide/10"
+					/>
+					<path
+						d="M0,60 C120,30 240,85 360,60 C480,30 600,85 720,60 C840,30 960,85 1080,60 C1200,30 1320,85 1440,60"
+						class="stroke-[#E08E45]/50"
+						fill="none"
+						stroke-width="2"
+					/>
+					<path
+						d="M1440,60 C1560,30 1680,85 1800,60 C1920,30 2040,85 2160,60 C2280,30 2400,85 2520,60 C2640,30 2760,85 2880,60"
+						class="stroke-[#E08E45]/50"
+						fill="none"
+						stroke-width="2"
+					/>
+				</svg>
 			</div>
-		{:else if availableSlots.length === 0}
-			<p class="mt-4 text-sm text-slate-500">Ingen ledige tider lige nu.</p>
-		{:else}
-			<div class="mt-3">
-				<BookingCalendar slots={availableSlots} {pendingId} onBook={handleBook} />
+		</div>
+	</section>
+
+	<!-- SÅDAN BOOKER DU -->
+	<section class="mx-auto max-w-3xl px-4 py-10 sm:py-14">
+		<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Sådan foregår det</h2>
+		<ol class="mt-6 grid gap-8 sm:grid-cols-3 sm:gap-6">
+			{#each steps as step}
+				<li>
+					<span class="font-mono text-sm text-tide">{step.n}</span>
+					<h3 class="font-display mt-2 text-lg font-medium text-slate-900">{step.title}</h3>
+					<p class="mt-1.5 text-sm leading-relaxed text-slate-600">{step.text}</p>
+				</li>
+			{/each}
+		</ol>
+	</section>
+
+	<!-- FORDELE -->
+	<section class="border-t border-slate-100 bg-slate-50/60">
+		<div class="mx-auto max-w-3xl px-4 py-10 sm:py-14">
+			<div class="grid gap-5 sm:grid-cols-3">
+				{#each features as feature}
+					<div class="rounded-2xl border border-slate-200 bg-white p-5">
+						<h3 class="text-sm font-semibold text-slate-900">{feature.title}</h3>
+						<p class="mt-1.5 text-sm leading-relaxed text-slate-500">{feature.text}</p>
+					</div>
+				{/each}
 			</div>
-		{/if}
+		</div>
+	</section>
+
+	<!-- AFSLUTTENDE CTA -->
+	<section class="relative overflow-hidden bg-tide">
+		<div class="wave-wrap absolute inset-x-0 top-0 h-16 -translate-y-1 opacity-40 sm:h-24" aria-hidden="true">
+			<div class="wave-track">
+				<svg viewBox="0 0 1440 100" preserveAspectRatio="none" class="h-full w-[200%]">
+					<path
+						d="M0,55 C120,20 240,90 360,55 C480,20 600,90 720,55 C840,20 960,90 1080,55 C1200,20 1320,90 1440,55 L1440,0 L0,0 Z M1440,55 C1560,20 1680,90 1800,55 C1920,20 2040,90 2160,55 C2280,20 2400,90 2520,55 C2640,20 2760,90 2880,55 L2880,0 L1440,0 Z"
+						class="fill-white/10"
+					/>
+				</svg>
+			</div>
+		</div>
+
+		<div class="relative mx-auto max-w-3xl px-4 py-14 text-center sm:py-20">
+			<h2 class="font-display text-2xl font-semibold text-white sm:text-3xl">
+				Klar til at booke din tid?
+			</h2>
+			<p class="mx-auto mt-3 max-w-md text-sm text-white/80 sm:text-base">
+				Det tager under et minut, og du kan altid ændre den igen senere.
+			</p>
+			<a
+				href="/book"
+				class="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-tide shadow-sm transition hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+			>
+				Se ledige tider
+			</a>
+		</div>
 	</section>
 </div>
+
+<style>
+	.wave-wrap {
+		overflow: hidden;
+	}
+	.wave-track {
+		display: flex;
+		width: 200%;
+		animation: drift 22s linear infinite;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.wave-track {
+			animation: none;
+		}
+	}
+	@keyframes drift {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(-50%);
+		}
+	}
+</style>
