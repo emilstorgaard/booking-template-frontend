@@ -4,36 +4,37 @@
 	import { page } from '$app/stores';
 	import LoginModal from '$lib/components/LoginModal.svelte';
 	import RegisterModal from '$lib/components/RegisterModal.svelte';
+	import NavLink from '$lib/components/layout/NavLink.svelte';
+	import MobileNavLink from '$lib/components/layout/MobileNavLink.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
 	import { userStore, hasRole } from '$lib/stores/auth';
 	import { logout } from '$lib/utils/auth';
 	import { triggerToast } from '$lib/stores/toastStore';
+	import {
+		authModalStore,
+		openLoginModal,
+		openRegisterModal,
+		closeAuthModal
+	} from '$lib/stores/modalStore';
 
 	let isMenuOpen = $state(false);
 	let headerEl = $state<HTMLElement | null>(null);
 
-	let activeModal = $state<'login' | 'register' | null>(null);
-
 	const currentPath = $derived($page.url.pathname);
 
 	function isActive(link: string): boolean {
-		if (link === '/') {
-			return currentPath === '/';
-		}
+		if (link === '/') return currentPath === '/';
 		return currentPath === link || currentPath.startsWith(link + '/');
 	}
 
-	function openLoginModal() {
+	function handleOpenLogin() {
 		isMenuOpen = false;
-		activeModal = 'login';
+		openLoginModal();
 	}
 
-	function openRegisterModal() {
+	function handleOpenRegister() {
 		isMenuOpen = false;
-		activeModal = 'register';
-	}
-
-	function closeModal() {
-		activeModal = null;
+		openRegisterModal();
 	}
 
 	async function handleLogout() {
@@ -67,6 +68,12 @@
 			document.removeEventListener('keydown', handleKeydown);
 		};
 	});
+
+	const navItems = [
+		{ href: '/om', label: 'Om os' },
+		{ href: '/ydelser', label: 'Ydelser' },
+		{ href: '/faq', label: 'FAQ' }
+	];
 </script>
 
 <header
@@ -75,10 +82,7 @@
 >
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="flex h-16 items-center justify-between sm:h-18 md:h-20">
-			<a
-				href="/"
-				class="group flex items-center gap-2 transition-opacity hover:opacity-90 sm:gap-3"
-			>
+			<a href="/" class="group flex items-center gap-2 transition-opacity hover:opacity-90 sm:gap-3">
 				<img
 					src="/logo.png"
 					sizes="48px"
@@ -91,72 +95,35 @@
 					class="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 md:h-10"
 				/>
 				<div class="min-w-0 text-left">
-					<span
-						class="block truncate text-sm leading-tight font-bold text-gray-500 sm:text-base md:text-lg"
-					>
+					<span class="block truncate text-sm leading-tight font-bold text-gray-500 sm:text-base md:text-lg">
 						Booking Template
 					</span>
-					<span
-						class="block truncate text-[10px] font-medium tracking-wide text-brand-600 sm:text-xs"
-					>
+					<span class="block truncate text-[10px] font-medium tracking-wide text-brand-600 sm:text-xs">
 						Emil Storgaard Andersen
 					</span>
 				</div>
 			</a>
 
 			<nav class="hidden items-center gap-1 xl:flex">
-				<a
-					href="/#"
-					aria-current={isActive('/#') ? 'page' : undefined}
-					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600
-						{isActive('/#') ? 'bg-brand-50 text-brand-600' : 'text-gray-600'}"
-				>
-					Om
-					<span
-						class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300
-							{isActive('/#') ? 'w-4/5' : 'w-0 group-hover:w-4/5'}"
-					></span>
-				</a>
-
-				<a
-					href="/book"
-					aria-current={isActive('/book') ? 'page' : undefined}
-					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600
-						{isActive('/book') ? 'bg-brand-50 text-brand-600' : 'text-gray-600'}"
-				>
-					Book tid
-					<span
-						class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300
-							{isActive('/book') ? 'w-4/5' : 'w-0 group-hover:w-4/5'}"
-					></span>
-				</a>
+				{#each navItems as item (item.href)}
+					<NavLink href={item.href} active={isActive(item.href)}>{item.label}</NavLink>
+				{/each}
 
 				{#if $userStore && hasRole($userStore, 'Admin')}
-					<a
-						href="/admin"
-						aria-current={isActive('/admin') ? 'page' : undefined}
-						class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600
-							{isActive('/admin') ? 'bg-brand-50 text-brand-600' : 'text-gray-600'}"
-					>
-						Admin
-						<span
-							class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300
-								{isActive('/admin') ? 'w-4/5' : 'w-0 group-hover:w-4/5'}"
-						></span>
-					</a>
+					<NavLink href="/admin" active={isActive('/admin')}>Admin</NavLink>
 				{/if}
 
 				{#if !$userStore}
 					<button
 						title="Log ind"
-						onclick={openLoginModal}
+						onclick={handleOpenLogin}
 						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
 					>
 						Log ind
 					</button>
 					<button
 						title="Opret bruger"
-						onclick={openRegisterModal}
+						onclick={handleOpenRegister}
 						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
 					>
 						Opret bruger
@@ -171,14 +138,7 @@
 					</button>
 				{/if}
 
-				<a
-					href="/#"
-					aria-current={isActive('/#') ? 'page' : undefined}
-					class="ml-4 rounded-full px-6 py-3 text-base font-semibold text-white shadow-md shadow-brand-500/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-500/30
-						{isActive('/#') ? 'bg-brand-600' : 'bg-brand-500 hover:bg-brand-400'}"
-				>
-					Kontakt
-				</a>
+				<Button href="/book" size="sm" class="ml-4">Book tid</Button>
 			</nav>
 
 			<button
@@ -209,77 +169,41 @@
 	</div>
 
 	{#if isMenuOpen}
-		<nav
-			class="absolute top-full left-0 z-50 w-full border-t border-gray-100 bg-white/98 shadow-lg backdrop-blur-md xl:hidden"
-		>
+		<nav class="absolute top-full left-0 z-50 w-full border-t border-gray-100 bg-white/98 shadow-lg backdrop-blur-md xl:hidden">
 			<div class="mx-auto max-w-7xl px-4 py-3">
-				<div class="mt-3 border-t border-gray-100 pt-3">
+				<div class="pb-3">
 					<a
-						href="/#"
+						href="/book"
 						onclick={() => (isMenuOpen = false)}
-						aria-current={isActive('/#') ? 'page' : undefined}
-						class="block w-full rounded-full py-3 text-center font-semibold text-white transition
-							{isActive('/#') ? 'bg-brand-600' : 'bg-brand-500 hover:bg-brand-400'}"
+						class="block w-full rounded-full bg-tide py-3 text-center font-semibold text-white transition hover:bg-tide/90"
 					>
-						Kontakt
+						Book tid
 					</a>
 				</div>
 
-				<a
-					href="/#"
-					onclick={() => (isMenuOpen = false)}
-					aria-current={isActive('/#') ? 'page' : undefined}
-					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600
-						{isActive('/#') ? 'bg-brand-50 text-brand-600' : 'text-gray-700'}"
-				>
-					<span
-						class="h-1.5 w-1.5 rounded-full transition-all
-							{isActive('/#') ? 'scale-150 bg-brand-600' : 'bg-brand-400'}"
-					></span>
-					Om
-				</a>
-
-				<a
-					href="/book"
-					onclick={() => (isMenuOpen = false)}
-					aria-current={isActive('/book') ? 'page' : undefined}
-					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600
-						{isActive('/book') ? 'bg-brand-50 text-brand-600' : 'text-gray-700'}"
-				>
-					<span
-						class="h-1.5 w-1.5 rounded-full transition-all
-							{isActive('/book') ? 'scale-150 bg-brand-600' : 'bg-brand-400'}"
-					></span>
-					Book tid
-				</a>
+				{#each navItems as item (item.href)}
+					<MobileNavLink href={item.href} active={isActive(item.href)} onclick={() => (isMenuOpen = false)}>
+						{item.label}
+					</MobileNavLink>
+				{/each}
 
 				{#if $userStore && hasRole($userStore, 'Admin')}
-					<a
-						href="/admin"
-						onclick={() => (isMenuOpen = false)}
-						aria-current={isActive('/admin') ? 'page' : undefined}
-						class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600
-							{isActive('/admin') ? 'bg-brand-50 text-brand-600' : 'text-gray-700'}"
-					>
-						<span
-							class="h-1.5 w-1.5 rounded-full transition-all
-								{isActive('/admin') ? 'scale-150 bg-brand-600' : 'bg-brand-400'}"
-						></span>
+					<MobileNavLink href="/admin" active={isActive('/admin')} onclick={() => (isMenuOpen = false)}>
 						Admin
-					</a>
+					</MobileNavLink>
 				{/if}
 
 				{#if !$userStore}
 					<button
 						title="Log ind"
-						onclick={openLoginModal}
+						onclick={handleOpenLogin}
 						class="mt-3 block w-full rounded-full bg-brand-500 py-3 text-center font-semibold text-white transition hover:bg-brand-400"
 					>
 						Log ind
 					</button>
 					<button
 						title="Opret bruger"
-						onclick={openRegisterModal}
+						onclick={handleOpenRegister}
 						class="mt-3 block w-full rounded-full border border-brand-500 py-3 text-center font-semibold text-brand-600 transition hover:bg-brand-50"
 					>
 						Opret bruger
@@ -301,8 +225,8 @@
 	{/if}
 </header>
 
-{#if activeModal === 'login'}
-	<LoginModal onclose={closeModal} onSwitchToRegister={openRegisterModal} />
-{:else if activeModal === 'register'}
-	<RegisterModal onclose={closeModal} onSwitchToLogin={openLoginModal} />
+{#if $authModalStore === 'login'}
+	<LoginModal onclose={closeAuthModal} onSwitchToRegister={openRegisterModal} />
+{:else if $authModalStore === 'register'}
+	<RegisterModal onclose={closeAuthModal} onSwitchToLogin={openLoginModal} />
 {/if}
