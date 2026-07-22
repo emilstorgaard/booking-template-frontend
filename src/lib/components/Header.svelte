@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import LoginModal from '$lib/components/LoginModal.svelte';
 	import RegisterModal from '$lib/components/RegisterModal.svelte';
 	import { userStore, hasRole } from '$lib/stores/auth';
@@ -11,6 +12,15 @@
 	let headerEl = $state<HTMLElement | null>(null);
 
 	let activeModal = $state<'login' | 'register' | null>(null);
+
+	const currentPath = $derived($page.url.pathname);
+
+	function isActive(link: string): boolean {
+		if (link === '/') {
+			return currentPath === '/';
+		}
+		return currentPath === link || currentPath.startsWith(link + '/');
+	}
 
 	function openLoginModal() {
 		isMenuOpen = false;
@@ -64,30 +74,30 @@
 	class="relative z-50 border-b border-white/20 bg-white/80 shadow-sm backdrop-blur-md transition-all"
 >
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="flex h-20 items-center justify-between sm:h-24 md:h-28 lg:h-32">
+		<div class="flex h-16 items-center justify-between sm:h-18 md:h-20">
 			<a
 				href="/"
 				class="group flex items-center gap-2 transition-opacity hover:opacity-90 sm:gap-3"
 			>
 				<img
 					src="/logo.png"
-					sizes="96px"
+					sizes="48px"
 					alt="logo"
 					fetchpriority="high"
 					loading="eager"
 					decoding="async"
-					width="96"
-					height="96"
-					class="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-16 md:h-20 lg:h-24"
+					width="48"
+					height="48"
+					class="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 md:h-10"
 				/>
 				<div class="min-w-0 text-left">
 					<span
-						class="block truncate text-base leading-tight font-bold text-gray-500 sm:text-xl md:text-2xl lg:text-3xl"
+						class="block truncate text-sm leading-tight font-bold text-gray-500 sm:text-base md:text-lg"
 					>
 						Booking Template
 					</span>
 					<span
-						class="block truncate text-[10px] font-medium tracking-wide text-brand-600 sm:text-xs md:text-sm lg:text-base"
+						class="block truncate text-[10px] font-medium tracking-wide text-brand-600 sm:text-xs"
 					>
 						Emil Storgaard Andersen
 					</span>
@@ -97,27 +107,42 @@
 			<nav class="hidden items-center gap-1 xl:flex">
 				<a
 					href="/#"
-					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600 text-gray-600"
+					aria-current={isActive('/#') ? 'page' : undefined}
+					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600
+						{isActive('/#') ? 'bg-brand-50 text-brand-600' : 'text-gray-600'}"
 				>
 					Om
 					<span
-						class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300 w-0 group-hover:w-4/5"
+						class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300
+							{isActive('/#') ? 'w-4/5' : 'w-0 group-hover:w-4/5'}"
 					></span>
 				</a>
 
 				<a
 					href="/book"
-					class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
+					aria-current={isActive('/book') ? 'page' : undefined}
+					class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600
+						{isActive('/book') ? 'bg-brand-50 text-brand-600' : 'text-gray-600'}"
 				>
 					Book tid
+					<span
+						class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300
+							{isActive('/book') ? 'w-4/5' : 'w-0 group-hover:w-4/5'}"
+					></span>
 				</a>
 
 				{#if $userStore && hasRole($userStore, 'Admin')}
 					<a
 						href="/admin"
-						class="rounded-full px-5 py-2.5 text-base font-semibold text-gray-600 transition-all duration-200 hover:bg-brand-50 hover:text-brand-600"
+						aria-current={isActive('/admin') ? 'page' : undefined}
+						class="group relative rounded-full px-5 py-2.5 text-base font-semibold transition-all duration-200 hover:bg-brand-50 hover:text-brand-600
+							{isActive('/admin') ? 'bg-brand-50 text-brand-600' : 'text-gray-600'}"
 					>
 						Admin
+						<span
+							class="absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-brand-500 transition-all duration-300
+								{isActive('/admin') ? 'w-4/5' : 'w-0 group-hover:w-4/5'}"
+						></span>
 					</a>
 				{/if}
 
@@ -148,7 +173,9 @@
 
 				<a
 					href="/#"
-					class="ml-4 rounded-full px-6 py-3 text-base font-semibold text-black shadow-md shadow-brand-500/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-500/30 bg-brand-500 hover:bg-brand-400"
+					aria-current={isActive('/#') ? 'page' : undefined}
+					class="ml-4 rounded-full px-6 py-3 text-base font-semibold text-white shadow-md shadow-brand-500/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-500/30
+						{isActive('/#') ? 'bg-brand-600' : 'bg-brand-500 hover:bg-brand-400'}"
 				>
 					Kontakt
 				</a>
@@ -190,7 +217,9 @@
 					<a
 						href="/#"
 						onclick={() => (isMenuOpen = false)}
-						class="block w-full rounded-full py-3 text-center font-semibold text-white transition bg-brand-500 hover:bg-brand-400"
+						aria-current={isActive('/#') ? 'page' : undefined}
+						class="block w-full rounded-full py-3 text-center font-semibold text-white transition
+							{isActive('/#') ? 'bg-brand-600' : 'bg-brand-500 hover:bg-brand-400'}"
 					>
 						Kontakt
 					</a>
@@ -199,18 +228,28 @@
 				<a
 					href="/#"
 					onclick={() => (isMenuOpen = false)}
-					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600 text-gray-700"
+					aria-current={isActive('/#') ? 'page' : undefined}
+					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600
+						{isActive('/#') ? 'bg-brand-50 text-brand-600' : 'text-gray-700'}"
 				>
-					<span class="h-1.5 w-1.5 rounded-full transition-all bg-brand-400"></span>
+					<span
+						class="h-1.5 w-1.5 rounded-full transition-all
+							{isActive('/#') ? 'scale-150 bg-brand-600' : 'bg-brand-400'}"
+					></span>
 					Om
 				</a>
 
 				<a
 					href="/book"
 					onclick={() => (isMenuOpen = false)}
-					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600 text-gray-700"
+					aria-current={isActive('/book') ? 'page' : undefined}
+					class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600
+						{isActive('/book') ? 'bg-brand-50 text-brand-600' : 'text-gray-700'}"
 				>
-					<span class="h-1.5 w-1.5 rounded-full transition-all bg-brand-400"></span>
+					<span
+						class="h-1.5 w-1.5 rounded-full transition-all
+							{isActive('/book') ? 'scale-150 bg-brand-600' : 'bg-brand-400'}"
+					></span>
 					Book tid
 				</a>
 
@@ -218,9 +257,14 @@
 					<a
 						href="/admin"
 						onclick={() => (isMenuOpen = false)}
-						class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600 text-gray-700"
+						aria-current={isActive('/admin') ? 'page' : undefined}
+						class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition hover:bg-brand-50 hover:text-brand-600
+							{isActive('/admin') ? 'bg-brand-50 text-brand-600' : 'text-gray-700'}"
 					>
-						<span class="h-1.5 w-1.5 rounded-full transition-all bg-brand-400"></span>
+						<span
+							class="h-1.5 w-1.5 rounded-full transition-all
+								{isActive('/admin') ? 'scale-150 bg-brand-600' : 'bg-brand-400'}"
+						></span>
 						Admin
 					</a>
 				{/if}
