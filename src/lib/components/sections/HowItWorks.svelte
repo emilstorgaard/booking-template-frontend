@@ -3,9 +3,9 @@
 	import MovementLine from '$lib/components/ui/MovementLine.svelte';
 
 	const steps = [
-		{ n: '1', title: 'Vælg en dag', text: 'Se de kommende uger, og find en dag der passer ind i din kalender.' },
-		{ n: '2', title: 'Vælg et tidspunkt', text: 'Kun de tider der reelt er ledige bliver vist — ingen gætteri.' },
-		{ n: '3', title: 'Bekræft', text: 'Bekræft med ét klik. Fortryder du, kan du altid ændre den igen.' }
+		{ title: 'Vælg en dag', text: 'Se de kommende uger, og find en dag der passer ind i din kalender.' },
+		{ title: 'Vælg et tidspunkt', text: 'Kun de tider der reelt er ledige bliver vist — ingen gætteri.' },
+		{ title: 'Bekræft', text: 'Bekræft med ét klik. Fortryder du, kan du altid ændre den igen.' }
 	];
 </script>
 
@@ -25,14 +25,9 @@
 		<ol class="mt-10 grid gap-6 sm:grid-cols-3">
 			{#each steps as step}
 				<li>
-					<Card class="relative overflow-hidden">
-						<span
-							class="pointer-events-none absolute -top-3 -right-1 font-['Instrument_Serif'] text-7xl text-[#172420]/[0.06] italic"
-						>
-							{step.n}
-						</span>
-						<h3 class="relative font-['Instrument_Serif'] text-2xl text-[#172420] italic">{step.title}</h3>
-						<p class="relative mt-2 text-sm leading-relaxed text-[#46605A]">{step.text}</p>
+					<Card>
+						<h3 class="font-['Instrument_Serif'] text-2xl text-[#172420] italic">{step.title}</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[#46605A]">{step.text}</p>
 					</Card>
 				</li>
 			{/each}
