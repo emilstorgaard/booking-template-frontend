@@ -2,70 +2,73 @@ import { userStore } from "$lib/stores/auth";
 import { setCookie, deleteCookie } from "$lib/utils/cookies"
 import { API_BASE_URL } from "./config";
 
-export async function login(email: string, password: string) {
-    if (!email || !password || typeof email !== "string" || typeof password !== "string") {
+interface LoginResponse {
+    token: string;
+}
+
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+export interface SignupRequest {
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+function authHeaders(): Record<string, string> {
+    return {
+        "Content-Type": "application/json"
+    };
+}
+
+async function handleAuthResponse<T>(response: Response): Promise<T> {
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error ?? errorData?.title ?? "Der skete en fejl.");
+    }
+    return response.json();
+}
+
+export async function login(dto: LoginRequest) {
+    if (!dto.email || !dto.password || typeof dto.email !== "string" || typeof dto.password !== "string") {
         throw new Error("Email og password er påkrævet.");
     }
 
-    const formData = new URLSearchParams();
-    formData.append("Email", email);
-    formData.append("Password", password);
-
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: formData.toString()
+        headers: authHeaders(),
+        body: JSON.stringify(dto)
     });
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Login fejlede");
-    }
-
-    console.log("Login successful", response.ok);
-
-    const data = await response.json();
-
-    const { token } = data
+    const { token } = await handleAuthResponse<LoginResponse>(response);
 
     setCookie("jwt", token, {
         "max-age": 60 * 60 * 24 * 30,
         path: '/',
         samesite: 'lax',
-        secure: true // kun over https
+        secure: true
     });
     return
 }
 
-export async function signup(email: string, password: string, confirmPassword: string) {
-    if (!email || !password || !confirmPassword || typeof email !== "string" || typeof password !== "string" || typeof confirmPassword !== "string") {
+export async function signup(dto: SignupRequest) {
+    if (!dto.email || !dto.password || !dto.confirmPassword || typeof dto.email !== "string" || typeof dto.password !== "string" || typeof dto.confirmPassword !== "string") {
         throw new Error("Email og password er påkrævet.");
     }
 
-    if (password != confirmPassword) {
+    if (dto.password != dto.confirmPassword) {
         throw new Error("Passwords does not match!.");
     }
 
-    const formData = new URLSearchParams();
-    formData.append("Email", email);
-    formData.append("Password", password);
-
     const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: formData.toString()
+        headers: authHeaders(),
+        body: JSON.stringify({ email: dto.email, password: dto.password })
     });
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Signup fejlede");
-    }
-
-    return
+    return handleAuthResponse(response);
 }
 
 export async function logout() {

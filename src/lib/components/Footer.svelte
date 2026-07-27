@@ -1,35 +1,38 @@
 <script lang="ts"></script>
 
-<footer class="border-t border-gray-100 bg-white/80 px-4 py-10 text-gray-500">
-	<div class="mx-auto grid max-w-6xl gap-8 text-center sm:grid-cols-3 sm:text-left">
-		<a href="/" class="group flex flex-col items-center gap-3 sm:flex-row">
+<footer class="border-t border-[#172420]/8 bg-[#ECF0E9] px-4 py-14 text-[#46605A]">
+	<div class="mx-auto grid max-w-6xl gap-10 text-center sm:grid-cols-3 sm:text-left">
+		<a href="/" class="group flex flex-col items-center gap-3 sm:flex-row sm:items-start">
 			<img
 				src="/logo.png"
-				sizes="64px"
+				sizes="56px"
 				alt="logo"
-				width="64"
-				height="64"
+				width="56"
+				height="56"
 				loading="lazy"
 				decoding="async"
-				class="h-12 w-12 object-contain transition-transform duration-300 group-hover:scale-110"
+				class="h-10 w-10 rounded-full object-contain"
 			/>
-			<span class="text-base font-bold tracking-tight sm:text-lg">Booking Template</span>
+			<div>
+				<span class="block font-['Instrument_Serif'] text-lg text-[#172420] italic">Booking Template</span>
+				<span class="mt-1 block text-[11px] tracking-wide text-[#46605A]/70">Din undertekst her</span>
+			</div>
 		</a>
 
-		<nav class="flex flex-col items-center gap-2 text-sm sm:items-center" aria-label="Sidefod-navigation">
-			<a href="/om" class="transition hover:text-tide">Om os</a>
-			<a href="/faq" class="transition hover:text-tide">FAQ</a>
-			<a href="/book" class="transition hover:text-tide">Book tid</a>
+		<nav class="flex flex-col items-center gap-2.5 text-sm sm:items-center" aria-label="Sidefod-navigation">
+			<a href="/om" class="transition hover:text-[#172420]">Om os</a>
+			<a href="/faq" class="transition hover:text-[#172420]">FAQ</a>
+			<a href="/book" class="transition hover:text-[#172420]">Book tid</a>
 		</nav>
 
 		<div class="flex flex-col items-center gap-4 sm:items-end">
-			<div class="flex gap-3">
+			<div class="flex gap-2.5">
 				<a
 					href="https://www.instagram.com/"
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="Instagram"
-					class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-all duration-200 hover:scale-110 hover:bg-pink-500 hover:text-white"
+					class="flex h-9 w-9 items-center justify-center rounded-full border border-[#172420]/10 text-[#46605A] transition hover:border-[#96392C] hover:text-[#96392C]"
 				>
 					<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 						<path
@@ -42,7 +45,7 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="Facebook"
-					class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-all duration-200 hover:scale-110 hover:bg-blue-600 hover:text-white"
+					class="flex h-9 w-9 items-center justify-center rounded-full border border-[#172420]/10 text-[#46605A] transition hover:border-[#96392C] hover:text-[#96392C]"
 				>
 					<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 						<path
@@ -51,7 +54,9 @@
 					</svg>
 				</a>
 			</div>
-			<p class="text-xs text-gray-400">© {new Date().getFullYear()} Emil Storgaard Andersen</p>
+			<p class="text-[11px] tracking-wide text-[#46605A]/60">
+				© {new Date().getFullYear()} Booking Template
+			</p>
 		</div>
 	</div>
 </footer>

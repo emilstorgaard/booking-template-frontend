@@ -10,6 +10,7 @@
 	} from '$lib/api/booking';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import DateTimePicker from '$lib/components/DateTimePicker.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
 
 	let slots = $state<TimeSlot[]>([]);
 	let loading = $state(true);
@@ -127,144 +128,168 @@
 	}
 
 	const inputClass =
-		'mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20';
+		"mt-1 w-full rounded-xl border border-[#172420]/15 bg-white px-3 py-2 font-['Public_Sans'] text-sm text-[#172420] transition focus:border-[#96392C] focus:outline-none focus:ring-2 focus:ring-[#96392C]/20";
+
+	const labelClass =
+		"mb-2 block font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.14em] text-[#46605A] uppercase";
 
 	onMount(loadSlots);
 </script>
 
-<div class="mx-auto max-w-4xl px-4 py-12 sm:py-16">
-	<h1 class="text-3xl font-semibold text-slate-900 sm:text-4xl">Administrer tider</h1>
-	<p class="mt-2 text-slate-500">Opret ledige tider som brugere kan booke.</p>
+<div class="mx-auto max-w-4xl px-4 pt-16 pb-10 sm:pt-24 sm:pb-14">
+	<span
+		class="inline-flex items-center gap-2 rounded-full border border-[#172420]/10 bg-white px-4 py-1.5 font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.16em] text-[#46605A] uppercase"
+	>
+		Admin
+	</span>
 
-	<div class="mt-8 grid gap-5 md:grid-cols-2">
-		<form
-			onsubmit={handleCreateSingle}
-			class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-		>
-			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Opret én tid</h2>
-			{#key singleFormKey}
-				<div class="mt-4 space-y-3">
-					<label class="block text-sm">
-						<span class="text-slate-600">Start</span>
-						<DateTimePicker bind:value={singleStart} required />
-					</label>
-					<label class="block text-sm">
-						<span class="text-slate-600">Slut</span>
-						<DateTimePicker bind:value={singleEnd} required />
-					</label>
-					<label class="block text-sm">
-						<span class="text-slate-600">Note (valgfri)</span>
-						<input type="text" bind:value={singleNotes} class={inputClass} />
-					</label>
-				</div>
-			{/key}
-			<button
-				type="submit"
-				disabled={creatingSingle}
-				class="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-60"
-			>
-				{#if creatingSingle}
-					<Spinner class="h-4 w-4" />
-					Opretter…
-				{:else}
-					Opret tid
-				{/if}
-			</button>
-		</form>
+	<h1 class="mt-7 font-['Instrument_Serif'] text-4xl leading-[1.1] text-[#172420] italic sm:text-5xl">
+		Administrer tider
+	</h1>
 
-		<form
-			onsubmit={handleCreateBulk}
-			class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-		>
-			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">
-				Opret flere tider
-			</h2>
-			{#key bulkFormKey}
-				<div class="mt-4 space-y-3">
-					<label class="block text-sm">
-						<span class="text-slate-600">Fra</span>
-						<DateTimePicker bind:value={bulkFrom} required />
-					</label>
-					<label class="block text-sm">
-						<span class="text-slate-600">Til</span>
-						<DateTimePicker bind:value={bulkTo} required />
-					</label>
-					<label class="block text-sm">
-						<span class="text-slate-600">Varighed pr. tid (minutter)</span>
-						<input
-							type="number"
-							min="5"
-							step="5"
-							bind:value={bulkLength}
-							required
-							class={inputClass}
-						/>
-					</label>
-				</div>
-			{/key}
-			<button
-				type="submit"
-				disabled={creatingBulk}
-				class="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-60"
-			>
-				{#if creatingBulk}
-					<Spinner class="h-4 w-4" />
-					Opretter…
-				{:else}
-					Opret tider
-				{/if}
-			</button>
-		</form>
-	</div>
-
-	<section class="mt-10">
-		<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Alle tider</h2>
-
-		{#if loading}
-			<div class="mt-4 flex items-center gap-2 text-sm text-slate-500">
-				<Spinner class="h-4 w-4 text-brand-500" />
-				Henter tider…
-			</div>
-		{:else if slots.length === 0}
-			<p class="mt-4 text-sm text-slate-500">Ingen tider oprettet endnu.</p>
-		{:else}
-			<ul
-				class="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white shadow-sm"
-			>
-				{#each slots as slot (slot.id)}
-					<li class="flex items-center justify-between gap-3 px-5 py-3.5">
-						<div class="min-w-0">
-							<span class="text-sm text-slate-800"
-								>{formatTime(slot.startTimeUtc)} – {formatEndTime(slot.endTimeUtc)}</span
-							>
-							{#if slot.notes}
-								<span class="ml-2 truncate text-xs text-slate-400">{slot.notes}</span>
-							{/if}
-						</div>
-						<div class="flex shrink-0 items-center gap-3">
-							{#if slot.isBooked && slot.bookedByUserEmail}
-								<span class="hidden text-xs text-slate-500 sm:inline">{slot.bookedByUserEmail}</span
-								>
-							{/if}
-							<span
-								class="rounded-full px-2.5 py-0.5 text-xs font-medium {slot.isBooked
-									? 'bg-brand-50 text-brand-700'
-									: 'bg-tide/10 text-tide'}"
-							>
-								{slot.isBooked ? 'Booket' : 'Ledig'}
-							</span>
-							<button
-								class="text-sm text-slate-400 transition hover:text-red-600 disabled:opacity-50"
-								disabled={slot.isBooked || deletingId === slot.id}
-								title={slot.isBooked ? 'Kan ikke slette en booket tid' : 'Slet tid'}
-								onclick={() => handleDelete(slot)}
-							>
-								{deletingId === slot.id ? 'Sletter…' : 'Slet'}
-							</button>
-						</div>
-					</li>
-				{/each}
-			</ul>
-		{/if}
-	</section>
+	<p class="mt-6 max-w-xl text-base leading-relaxed text-[#46605A] sm:text-lg">
+		Opret ledige tider som kunder kan booke — enkeltvis eller for en hel periode ad gangen.
+	</p>
 </div>
+
+<section class="bg-[#ECF0E9] px-4 pt-2 pb-20">
+	<div class="mx-auto max-w-4xl">
+		<div class="grid gap-5 md:grid-cols-2">
+			<form
+				onsubmit={handleCreateSingle}
+				class="rounded-[24px] border border-[#172420]/10 bg-white p-6 shadow-[0_15px_40px_-25px_rgba(23,36,32,0.35)]"
+			>
+				<h2 class="font-['IBM_Plex_Mono'] text-[11px] font-semibold tracking-[0.2em] text-[#46605A] uppercase">
+					Opret én tid
+				</h2>
+
+				{#key singleFormKey}
+					<div class="mt-5 space-y-4">
+						<label class="block text-sm">
+							<span class={labelClass}>Start</span>
+							<DateTimePicker bind:value={singleStart} required />
+						</label>
+						<label class="block text-sm">
+							<span class={labelClass}>Slut</span>
+							<DateTimePicker bind:value={singleEnd} required />
+						</label>
+						<label class="block text-sm">
+							<span class={labelClass}>Note (valgfri)</span>
+							<input
+								type="text"
+								bind:value={singleNotes}
+								class={inputClass}
+								placeholder="F.eks. individuel session"
+							/>
+						</label>
+					</div>
+				{/key}
+
+				<Button type="submit" size="lg" disabled={creatingSingle} class="mt-6 w-full">
+					{#if creatingSingle}
+						<Spinner class="h-4 w-4" />
+						Opretter…
+					{:else}
+						Opret tid
+					{/if}
+				</Button>
+			</form>
+
+			<form
+				onsubmit={handleCreateBulk}
+				class="rounded-[24px] border border-[#172420]/10 bg-white p-6 shadow-[0_15px_40px_-25px_rgba(23,36,32,0.35)]"
+			>
+				<h2 class="font-['IBM_Plex_Mono'] text-[11px] font-semibold tracking-[0.2em] text-[#46605A] uppercase">
+					Opret flere tider
+				</h2>
+
+				{#key bulkFormKey}
+					<div class="mt-5 space-y-4">
+						<label class="block text-sm">
+							<span class={labelClass}>Fra</span>
+							<DateTimePicker bind:value={bulkFrom} required />
+						</label>
+						<label class="block text-sm">
+							<span class={labelClass}>Til</span>
+							<DateTimePicker bind:value={bulkTo} required />
+						</label>
+						<label class="block text-sm">
+							<span class={labelClass}>Varighed pr. tid (minutter)</span>
+							<input
+								type="number"
+								min="5"
+								step="5"
+								bind:value={bulkLength}
+								required
+								class={inputClass}
+							/>
+						</label>
+					</div>
+				{/key}
+
+				<Button type="submit" size="lg" disabled={creatingBulk} class="mt-6 w-full">
+					{#if creatingBulk}
+						<Spinner class="h-4 w-4" />
+						Opretter…
+					{:else}
+						Opret tider
+					{/if}
+				</Button>
+			</form>
+		</div>
+
+		<div class="mt-10">
+			<h2 class="font-['IBM_Plex_Mono'] text-[11px] font-semibold tracking-[0.2em] text-[#46605A] uppercase">
+				Alle tider
+			</h2>
+
+			{#if loading}
+				<div class="mt-4 flex items-center gap-2 text-sm text-[#46605A]">
+					<Spinner class="h-4 w-4 text-[#96392C]" />
+					Henter tider…
+				</div>
+			{:else if slots.length === 0}
+				<p class="mt-4 text-sm text-[#46605A]">Ingen tider oprettet endnu.</p>
+			{:else}
+				<ul
+					class="mt-3 divide-y divide-[#172420]/6 rounded-[24px] border border-[#172420]/10 bg-white shadow-[0_15px_40px_-25px_rgba(23,36,32,0.35)]"
+				>
+					{#each slots as slot (slot.id)}
+						<li class="flex items-center justify-between gap-3 px-5 py-3.5">
+							<div class="min-w-0">
+								<span class="text-sm text-[#172420] capitalize"
+									>{formatTime(slot.startTimeUtc)} – {formatEndTime(slot.endTimeUtc)}</span
+								>
+								{#if slot.notes}
+									<span class="ml-2 truncate font-['IBM_Plex_Mono'] text-xs text-[#46605A]/60">{slot.notes}</span>
+								{/if}
+							</div>
+							<div class="flex shrink-0 items-center gap-3">
+								{#if slot.isBooked && slot.bookedByUserEmail}
+									<span class="hidden font-['IBM_Plex_Mono'] text-[10px] text-[#46605A] sm:inline"
+										>{slot.bookedByUserEmail}</span
+									>
+								{/if}
+								<span
+									class="rounded-full px-2.5 py-0.5 font-['IBM_Plex_Mono'] text-[10px] font-medium tracking-[0.06em] uppercase {slot.isBooked
+										? 'bg-[#96392C]/10 text-[#96392C]'
+										: 'bg-[#46605A]/10 text-[#46605A]'}"
+								>
+									{slot.isBooked ? 'Booket' : 'Ledig'}
+								</span>
+								<button
+									class="font-['IBM_Plex_Mono'] text-[10px] tracking-[0.08em] text-[#46605A]/70 uppercase transition hover:text-[#96392C] disabled:opacity-50"
+									disabled={slot.isBooked || deletingId === slot.id}
+									title={slot.isBooked ? 'Kan ikke slette en booket tid' : 'Slet tid'}
+									onclick={() => handleDelete(slot)}
+								>
+									{deletingId === slot.id ? 'Sletter…' : 'Slet'}
+								</button>
+							</div>
+						</li>
+					{/each}
+				</ul>
+			{/if}
+		</div>
+	</div>
+</section>

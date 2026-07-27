@@ -3,6 +3,8 @@
 	import { login } from '$lib/utils/auth';
 	import { fetchUserData } from '$lib/utils/user';
 	import Modal from './Modal.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
 
 	let { onclose, onSwitchToRegister }: { onclose: () => void; onSwitchToRegister?: () => void } =
 		$props();
@@ -17,7 +19,7 @@
 
 		isSubmitting = true;
 		try {
-			await login(email, password);
+			await login({ email, password });
 			await fetchUserData();
 			onclose();
 		} catch (error: any) {
@@ -29,9 +31,9 @@
 </script>
 
 <Modal title="Log ind" {onclose}>
-	<form onsubmit={handleLogin} class="space-y-4 md:space-y-6">
+	<form onsubmit={handleLogin} class="space-y-5">
 		<div>
-			<label for="email" class="mb-2 block text-sm font-medium text-[#cfc9bb]">Email</label>
+			<label for="email" class="mb-1.5 block text-[13px] font-medium text-[#46605A]">Email</label>
 			<input
 				type="email"
 				name="email"
@@ -39,14 +41,13 @@
 				id="email"
 				autocomplete="email"
 				disabled={isSubmitting}
-				class="block w-full rounded-lg border border-white/10 bg-white/5 p-2.5 text-[#f2ede1] placeholder-[#cfc9bb]/50 transition focus:border-[#c1602e] focus:outline-none focus:ring-2 focus:ring-[#c1602e]/40 disabled:opacity-50"
+				class="block w-full rounded-2xl border border-[#172420]/12 bg-white p-3 text-[#172420] placeholder-[#46605A]/40 transition focus:border-[#96392C] focus:ring-2 focus:ring-[#96392C]/20 focus:outline-none disabled:opacity-50"
 				placeholder="jens@jensen.com"
 				required
 			/>
 		</div>
 		<div>
-			<label for="password" class="mb-2 block text-sm font-medium text-[#cfc9bb]">Adgangskode</label
-			>
+			<label for="password" class="mb-1.5 block text-[13px] font-medium text-[#46605A]">Adgangskode</label>
 			<input
 				type="password"
 				name="password"
@@ -55,42 +56,27 @@
 				autocomplete="current-password"
 				disabled={isSubmitting}
 				placeholder="••••••••"
-				class="block w-full rounded-lg border border-white/10 bg-white/5 p-2.5 text-[#f2ede1] placeholder-[#cfc9bb]/50 transition focus:border-[#c1602e] focus:outline-none focus:ring-2 focus:ring-[#c1602e]/40 disabled:opacity-50"
+				class="block w-full rounded-2xl border border-[#172420]/12 bg-white p-3 text-[#172420] placeholder-[#46605A]/40 transition focus:border-[#96392C] focus:ring-2 focus:ring-[#96392C]/20 focus:outline-none disabled:opacity-50"
 				required
 			/>
 		</div>
 
-		<button
-			type="submit"
-			title="Login"
-			disabled={isSubmitting}
-			class="flex w-full items-center justify-center gap-2 rounded-full bg-[#c1602e] px-4 py-2.5 font-semibold text-[#f2ede1] transition duration-300 ease-in-out hover:bg-[#d1712f] disabled:cursor-not-allowed disabled:opacity-60"
-		>
+		<Button type="submit" size="lg" disabled={isSubmitting} class="w-full">
 			{#if isSubmitting}
-				<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-					<circle
-						class="opacity-25"
-						cx="12"
-						cy="12"
-						r="10"
-						stroke="currentColor"
-						stroke-width="4"
-					/>
-					<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-				</svg>
-				Logger ind...
+				<Spinner class="h-4 w-4" />
+				Logger ind…
 			{:else}
 				Log ind
 			{/if}
-		</button>
+		</Button>
 
 		{#if onSwitchToRegister}
-			<p class="text-center text-sm text-[#cfc9bb]">
+			<p class="text-center text-sm text-[#46605A]">
 				Har du ikke en bruger?
 				<button
 					type="button"
 					onclick={onSwitchToRegister}
-					class="font-semibold text-[#c1602e] hover:text-[#d1712f] hover:underline"
+					class="font-semibold text-[#96392C] underline decoration-[#96392C]/30 underline-offset-2 hover:decoration-[#96392C]"
 				>
 					Opret bruger
 				</button>

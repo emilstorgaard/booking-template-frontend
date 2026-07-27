@@ -104,54 +104,72 @@
 
 <SeoHead seo={p} />
 
-<div class="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-	<h1 class="text-3xl font-semibold text-slate-900 sm:text-4xl">Book en tid</h1>
-	<p class="mt-2 text-slate-500">Vælg en markeret dag i kalenderen for at se ledige tider.</p>
+<div class="relative overflow-hidden bg-[#ECF0E9]">
+	<div
+		class="pointer-events-none absolute -top-[20%] right-[-10%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,_rgba(198,137,88,0.12),_transparent_70%)]"
+		aria-hidden="true"
+	></div>
 
-	{#if $userStore && myBookings.length > 0}
-		<section class="mt-10">
-			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Mine bookinger</h2>
-			<ul class="mt-3 grid gap-2 sm:grid-cols-2">
-				{#each myBookings as slot (slot.id)}
-					<li
-						class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
-					>
-						<span class="text-sm text-slate-700">{formatTime(slot.startTimeUtc)}</span>
-						<button
-							class="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-500 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
-							disabled={pendingId === slot.id}
-							onclick={() => handleCancel(slot)}
+	<div class="relative mx-auto max-w-2xl px-4 pt-20 pb-12 sm:pt-28 sm:pb-16">
+		<span class="inline-flex items-center gap-2 rounded-full border border-[#172420]/10 bg-white/70 px-4 py-1.5 text-[11px] font-semibold tracking-[0.18em] text-[#96392C] uppercase backdrop-blur-sm">
+			Book en tid
+		</span>
+
+		<h1 class="mt-7 font-['Instrument_Serif'] text-4xl leading-[1.1] text-[#172420] italic sm:text-5xl">
+			Find en ledig tid
+		</h1>
+
+		<p class="mt-6 max-w-xl text-base leading-relaxed text-[#46605A] sm:text-lg">
+			Vælg en markeret dag i kalenderen for at se ledige tider, og book direkte online.
+		</p>
+	</div>
+</div>
+
+<section class="bg-[#ECF0E9] px-4 pt-2 pb-20 sm:pb-24">
+	<div class="mx-auto max-w-3xl">
+		{#if $userStore && myBookings.length > 0}
+			<div class="mb-10">
+				<h2 class="text-[11px] font-semibold tracking-[0.24em] text-[#96392C] uppercase">Mine bookinger</h2>
+				<ul class="mt-4 grid gap-3 sm:grid-cols-2">
+					{#each myBookings as slot (slot.id)}
+						<li
+							class="flex items-center justify-between gap-3 rounded-full border border-[#172420]/8 bg-white px-5 py-3 shadow-[0_15px_40px_-25px_rgba(23,36,32,0.35)]"
 						>
-							{#if pendingId === slot.id}
-								<Spinner class="h-3.5 w-3.5" />
-							{/if}
-							{pendingId === slot.id ? 'Aflyser…' : 'Aflys'}
-						</button>
-					</li>
-				{/each}
-			</ul>
-		</section>
-	{/if}
+							<span class="text-sm text-[#172420] capitalize">{formatTime(slot.startTimeUtc)}</span>
+							<button
+								class="shrink-0 rounded-full border border-[#172420]/12 px-3.5 py-1.5 text-[13px] text-[#46605A] transition hover:border-[#96392C]/40 hover:bg-[#96392C]/5 hover:text-[#96392C] disabled:opacity-50"
+								disabled={pendingId === slot.id}
+								onclick={() => handleCancel(slot)}
+							>
+								{#if pendingId === slot.id}
+									<Spinner class="mr-1 inline h-3.5 w-3.5" />
+								{/if}
+								{pendingId === slot.id ? 'Aflyser…' : 'Aflys'}
+							</button>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 
-	<section class="mt-10">
 		<div class="flex items-baseline justify-between">
-			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Ledige tider</h2>
+			<h2 class="text-[11px] font-semibold tracking-[0.24em] text-[#96392C] uppercase">Ledige tider</h2>
 			{#if !$userStore}
-				<p class="text-xs text-slate-400">Log ind for at booke</p>
+				<p class="text-[11px] tracking-wide text-[#46605A]/70 uppercase">Log ind for at booke</p>
 			{/if}
 		</div>
 
 		{#if loading}
-			<div class="mt-4 flex items-center gap-2 text-sm text-slate-500">
-				<Spinner class="h-4 w-4 text-brand-500" />
+			<div class="mt-5 flex items-center gap-2 text-sm text-[#46605A]">
+				<Spinner class="h-4 w-4 text-[#96392C]" />
 				Henter tider…
 			</div>
 		{:else if availableSlots.length === 0}
-			<p class="mt-4 text-sm text-slate-500">Ingen ledige tider lige nu.</p>
+			<p class="mt-5 text-sm text-[#46605A]">Der er ingen ledige tider lige nu — kig forbi igen snart.</p>
 		{:else}
-			<div class="mt-3">
+			<div class="mt-4">
 				<BookingCalendar slots={availableSlots} {pendingId} onBook={handleBook} />
 			</div>
 		{/if}
-	</section>
-</div>
+	</div>
+</section>

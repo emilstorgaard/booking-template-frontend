@@ -20,7 +20,7 @@
 	);
 
 	const fieldClass =
-		'mt-1 rounded-lg border border-slate-300 px-3 py-2 text-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20';
+		"mt-1 rounded-sm border border-[#172420]/20 px-3 py-2 font-['IBM_Plex_Mono'] text-sm text-[#172420] transition focus:border-[#96392C] focus:outline-none focus:ring-2 focus:ring-[#96392C]/25";
 </script>
 
 <div class="flex gap-2">
@@ -31,7 +31,7 @@
 			<option value={h}>{h}</option>
 		{/each}
 	</select>
-	<span class="mt-1 flex items-center text-slate-400">:</span>
+	<span class="mt-1 flex items-center text-[#46605A]/60">:</span>
 	<select bind:value={minute} {required} class="{fieldClass} w-20">
 		<option value="" disabled selected>Min</option>
 		{#each minutes as m (m)}

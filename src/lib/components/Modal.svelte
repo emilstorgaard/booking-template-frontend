@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import MovementLine from '$lib/components/ui/MovementLine.svelte';
 
 	let { title = 'Title', onclose, children } = $props();
 
@@ -32,27 +33,27 @@
 </script>
 
 <div
-	class="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+	class="fixed inset-0 z-100 flex items-center justify-center bg-[#172420]/70 p-4 backdrop-blur-sm"
 	onclick={handleBackdropClick}
 	role="presentation"
 >
 	<div
 		bind:this={panelEl}
-		class="w-full max-w-md rounded-2xl border border-white/10 bg-[#14201c] text-[#f2ede1] shadow-2xl outline-none"
+		class="w-full max-w-md overflow-hidden rounded-[28px] border border-[#172420]/8 bg-white text-[#172420] shadow-[0_30px_70px_-25px_rgba(23,36,32,0.55)] outline-none"
 		role="dialog"
 		aria-modal="true"
 		aria-labelledby="modal-title"
 		tabindex="-1"
 	>
-		<div class="flex items-center justify-between px-6 py-5 sm:px-8">
-			<h1 id="modal-title" class="text-xl font-semibold tracking-tight md:text-2xl">
+		<div class="flex items-center justify-between px-7 pt-7 pb-4 sm:px-9">
+			<h1 id="modal-title" class="font-['Instrument_Serif'] text-2xl text-[#172420] italic md:text-[28px]">
 				{title}
 			</h1>
 			<button
-				title="Close"
+				title="Luk"
 				onclick={close}
-				aria-label="Close"
-				class="flex h-9 w-9 items-center justify-center rounded-full text-[#f2ede1]/70 transition hover:bg-white/10 hover:text-[#f2ede1]"
+				aria-label="Luk"
+				class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#46605A] transition hover:bg-[#172420]/6 hover:text-[#172420]"
 			>
 				<svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
 					<path
@@ -64,7 +65,11 @@
 			</button>
 		</div>
 
-		<div class="space-y-4 px-6 pb-6 sm:px-8 sm:pb-8 md:space-y-6">
+		<div class="px-7 text-[#172420]/10 sm:px-9">
+			<MovementLine class="h-3" />
+		</div>
+
+		<div class="space-y-5 px-7 pt-5 pb-8 sm:px-9">
 			{#if children}
 				{@render children()}
 			{/if}

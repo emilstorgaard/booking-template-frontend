@@ -9,10 +9,18 @@
 
 <div class={align === 'center' ? 'mx-auto max-w-xl text-center' : ''}>
 	{#if eyebrow}
-		<span class="text-xs font-semibold tracking-wide text-tide uppercase">{eyebrow}</span>
+		<span
+			class="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.24em] text-[#96392C] uppercase {align ===
+			'center'
+				? 'justify-center'
+				: ''}"
+		>
+			<span class="h-px w-5 bg-[#96392C]/50"></span>
+			{eyebrow}
+		</span>
 	{/if}
-	<h2 class="font-display mt-2 text-2xl font-semibold text-slate-900 sm:text-3xl">{title}</h2>
+	<h2 class="mt-3 font-['Instrument_Serif'] text-3xl text-[#172420] italic sm:text-4xl">{title}</h2>
 	{#if subtitle}
-		<p class="mt-3 text-slate-600">{subtitle}</p>
+		<p class="mt-3 max-w-md text-[#46605A] {align === 'center' ? 'mx-auto' : ''}">{subtitle}</p>
 	{/if}
 </div>

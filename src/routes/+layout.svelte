@@ -33,9 +33,15 @@
 
 <svelte:head>
 	<link rel="icon" href="/logo.png" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+		rel="stylesheet"
+	/>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col">
+<div class="flex min-h-screen flex-col bg-[#ECF0E9] font-['Public_Sans']">
 	<div bind:this={stickyEl} class="sticky top-0 z-50">
 		<Header />
 	</div>
