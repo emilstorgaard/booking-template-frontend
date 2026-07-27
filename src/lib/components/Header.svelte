@@ -71,7 +71,6 @@
 
 	const navItems = [
 		{ href: '/om', label: 'Om os' },
-		{ href: '/ydelser', label: 'Ydelser' },
 		{ href: '/faq', label: 'FAQ' }
 	];
 </script>

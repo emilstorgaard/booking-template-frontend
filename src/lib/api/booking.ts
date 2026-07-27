@@ -95,7 +95,7 @@ export async function createTimeSlot(dto: CreateTimeSlotRequest): Promise<{ mess
     return handleResponse(response);
 }
 
-export async function createBulkTimeSlots(dto: CreateBulkTimeSlotsRequest): Promise<TimeSlot[]> {
+export async function createBulkTimeSlots(dto: CreateBulkTimeSlotsRequest): Promise<{ message: string }> {
     const response = await fetch(`${API_BASE_URL}/admin/timeslots/bulk`, {
         method: "POST",
         headers: authHeaders(),
@@ -104,7 +104,7 @@ export async function createBulkTimeSlots(dto: CreateBulkTimeSlotsRequest): Prom
     return handleResponse(response);
 }
 
-export async function deleteTimeSlot(id: number): Promise<void> {
+export async function deleteTimeSlot(id: number): Promise<{ message: string }> {
     const response = await fetch(`${API_BASE_URL}/admin/timeslots/${id}`, {
         method: "DELETE",
         headers: authHeaders()

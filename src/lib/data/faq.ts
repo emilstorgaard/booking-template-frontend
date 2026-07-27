@@ -16,16 +16,11 @@ export const faqItems: FaqItem[] = [
 	{
 		id: 'faq-3',
 		question: 'Skal jeg forberede mig til første besøg?',
-		answer: 'Nej, du skal blot møde op til tiden. Tag gerne løst tøj på, hvis behandlingen kræver bevægelse.'
+		answer: 'Nej, du skal blot møde op til tiden.'
 	},
 	{
 		id: 'faq-4',
 		question: 'Hvad koster en behandling?',
 		answer: 'Se de aktuelle priser under "Ydelser" — de varierer efter behandlingstype og varighed.'
-	},
-	{
-		id: 'faq-5',
-		question: 'Tager I imod sundhedsforsikring?',
-		answer: 'Det afhænger af dit forsikringsselskab. Kontakt os gerne, så hjælper vi med at afklare det.'
 	}
 ];

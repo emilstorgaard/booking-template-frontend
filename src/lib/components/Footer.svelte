@@ -18,7 +18,6 @@
 
 		<nav class="flex flex-col items-center gap-2 text-sm sm:items-center" aria-label="Sidefod-navigation">
 			<a href="/om" class="transition hover:text-tide">Om os</a>
-			<a href="/ydelser" class="transition hover:text-tide">Ydelser</a>
 			<a href="/faq" class="transition hover:text-tide">FAQ</a>
 			<a href="/book" class="transition hover:text-tide">Book tid</a>
 		</nav>

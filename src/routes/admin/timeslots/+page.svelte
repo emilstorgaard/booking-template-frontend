@@ -9,6 +9,7 @@
 		type TimeSlot
 	} from '$lib/api/booking';
 	import Spinner from '$lib/components/Spinner.svelte';
+	import DateTimePicker from '$lib/components/DateTimePicker.svelte';
 
 	let slots = $state<TimeSlot[]>([]);
 	let loading = $state(true);
@@ -18,17 +19,19 @@
 	let singleEnd = $state('');
 	let singleNotes = $state('');
 	let creatingSingle = $state(false);
+	let singleFormKey = $state(0);
 
 	let bulkFrom = $state('');
 	let bulkTo = $state('');
 	let bulkLength = $state(30);
 	let creatingBulk = $state(false);
+	let bulkFormKey = $state(0);
 
 	async function loadSlots() {
 		loading = true;
 		try {
 			slots = (await getAllTimeSlots()).sort(
-				(a, b) => new Date(a.startTimeUtc).getTime() - new Date(b.startTimeUtc).getTime()
+				(a, b) => parseAsUtc(a.startTimeUtc).getTime() - parseAsUtc(b.startTimeUtc).getTime()
 			);
 		} catch (err) {
 			triggerToast(err instanceof Error ? err.message : 'Kunne ikke hente tider.', 'error');
@@ -39,6 +42,11 @@
 
 	function toUtcIso(localDateTime: string): string {
 		return new Date(localDateTime).toISOString();
+	}
+
+	function parseAsUtc(iso: string): Date {
+		const hasTimezoneInfo = /Z$|[+-]\d{2}:?\d{2}$/.test(iso);
+		return new Date(hasTimezoneInfo ? iso : `${iso}Z`);
 	}
 
 	async function handleCreateSingle(e: SubmitEvent) {
@@ -56,6 +64,7 @@
 			singleStart = '';
 			singleEnd = '';
 			singleNotes = '';
+			singleFormKey++;
 			await loadSlots();
 		} catch (err) {
 			triggerToast(err instanceof Error ? err.message : 'Kunne ikke oprette tiden.', 'error');
@@ -70,14 +79,15 @@
 
 		creatingBulk = true;
 		try {
-			const created = await createBulkTimeSlots({
+			const result = await createBulkTimeSlots({
 				fromUtc: toUtcIso(bulkFrom),
 				toUtc: toUtcIso(bulkTo),
 				slotLengthMinutes: bulkLength
 			});
-			triggerToast(`${created.length} tider oprettet.`, 'success');
+			triggerToast(result.message, 'success');
 			bulkFrom = '';
 			bulkTo = '';
+			bulkFormKey++;
 			await loadSlots();
 		} catch (err) {
 			triggerToast(err instanceof Error ? err.message : 'Kunne ikke oprette tiderne.', 'error');
@@ -89,8 +99,8 @@
 	async function handleDelete(slot: TimeSlot) {
 		deletingId = slot.id;
 		try {
-			await deleteTimeSlot(slot.id);
-			triggerToast('Tiden er slettet.', 'success');
+			const result = await deleteTimeSlot(slot.id);
+			triggerToast(result.message, 'success');
 			await loadSlots();
 		} catch (err) {
 			triggerToast(err instanceof Error ? err.message : 'Kunne ikke slette tiden.', 'error');
@@ -100,7 +110,7 @@
 	}
 
 	function formatTime(iso: string): string {
-		return new Date(iso).toLocaleString('da-DK', {
+		return parseAsUtc(iso).toLocaleString('da-DK', {
 			weekday: 'short',
 			day: 'numeric',
 			month: 'short',
@@ -110,7 +120,7 @@
 	}
 
 	function formatEndTime(iso: string): string {
-		return new Date(iso).toLocaleTimeString('da-DK', {
+		return parseAsUtc(iso).toLocaleTimeString('da-DK', {
 			hour: '2-digit',
 			minute: '2-digit'
 		});
@@ -127,26 +137,27 @@
 	<p class="mt-2 text-slate-500">Opret ledige tider som brugere kan booke.</p>
 
 	<div class="mt-8 grid gap-5 md:grid-cols-2">
-		<!-- OPRET ÉN TID -->
 		<form
 			onsubmit={handleCreateSingle}
 			class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
 		>
 			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Opret én tid</h2>
-			<div class="mt-4 space-y-3">
-				<label class="block text-sm">
-					<span class="text-slate-600">Start</span>
-					<input type="datetime-local" bind:value={singleStart} required class={inputClass} />
-				</label>
-				<label class="block text-sm">
-					<span class="text-slate-600">Slut</span>
-					<input type="datetime-local" bind:value={singleEnd} required class={inputClass} />
-				</label>
-				<label class="block text-sm">
-					<span class="text-slate-600">Note (valgfri)</span>
-					<input type="text" bind:value={singleNotes} class={inputClass} />
-				</label>
-			</div>
+			{#key singleFormKey}
+				<div class="mt-4 space-y-3">
+					<label class="block text-sm">
+						<span class="text-slate-600">Start</span>
+						<DateTimePicker bind:value={singleStart} required />
+					</label>
+					<label class="block text-sm">
+						<span class="text-slate-600">Slut</span>
+						<DateTimePicker bind:value={singleEnd} required />
+					</label>
+					<label class="block text-sm">
+						<span class="text-slate-600">Note (valgfri)</span>
+						<input type="text" bind:value={singleNotes} class={inputClass} />
+					</label>
+				</div>
+			{/key}
 			<button
 				type="submit"
 				disabled={creatingSingle}
@@ -168,27 +179,29 @@
 			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">
 				Opret flere tider
 			</h2>
-			<div class="mt-4 space-y-3">
-				<label class="block text-sm">
-					<span class="text-slate-600">Fra</span>
-					<input type="datetime-local" bind:value={bulkFrom} required class={inputClass} />
-				</label>
-				<label class="block text-sm">
-					<span class="text-slate-600">Til</span>
-					<input type="datetime-local" bind:value={bulkTo} required class={inputClass} />
-				</label>
-				<label class="block text-sm">
-					<span class="text-slate-600">Varighed pr. tid (minutter)</span>
-					<input
-						type="number"
-						min="5"
-						step="5"
-						bind:value={bulkLength}
-						required
-						class={inputClass}
-					/>
-				</label>
-			</div>
+			{#key bulkFormKey}
+				<div class="mt-4 space-y-3">
+					<label class="block text-sm">
+						<span class="text-slate-600">Fra</span>
+						<DateTimePicker bind:value={bulkFrom} required />
+					</label>
+					<label class="block text-sm">
+						<span class="text-slate-600">Til</span>
+						<DateTimePicker bind:value={bulkTo} required />
+					</label>
+					<label class="block text-sm">
+						<span class="text-slate-600">Varighed pr. tid (minutter)</span>
+						<input
+							type="number"
+							min="5"
+							step="5"
+							bind:value={bulkLength}
+							required
+							class={inputClass}
+						/>
+					</label>
+				</div>
+			{/key}
 			<button
 				type="submit"
 				disabled={creatingBulk}

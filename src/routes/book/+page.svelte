@@ -108,7 +108,6 @@
 	<h1 class="text-3xl font-semibold text-slate-900 sm:text-4xl">Book en tid</h1>
 	<p class="mt-2 text-slate-500">Vælg en markeret dag i kalenderen for at se ledige tider.</p>
 
-	<!-- MINE BOOKINGER (kun for indloggede) -->
 	{#if $userStore && myBookings.length > 0}
 		<section class="mt-10">
 			<h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">Mine bookinger</h2>
