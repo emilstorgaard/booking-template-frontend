@@ -94,7 +94,9 @@
 					class="h-8 w-auto rounded-full object-contain sm:h-9 md:h-10"
 				/>
 				<div class="min-w-0 text-left">
-					<span class="block truncate font-['Instrument_Serif'] text-lg leading-tight text-[#172420] italic sm:text-xl">
+					<span
+						class="block truncate font-['Instrument_Serif'] text-lg leading-tight text-[#172420] italic sm:text-xl"
+					>
 						Booking Template
 					</span>
 					<span class="block truncate text-[10px] tracking-[0.14em] text-[#46605A]/70 uppercase">
@@ -109,6 +111,10 @@
 				{#each navItems as item (item.href)}
 					<NavLink href={item.href} active={isActive(item.href)}>{item.label}</NavLink>
 				{/each}
+
+				{#if $userStore}
+					<NavLink href="/profil" active={isActive('/profil')}>Min profil</NavLink>
+				{/if}
 
 				{#if $userStore && hasRole($userStore, 'Admin')}
 					<NavLink href="/admin" active={isActive('/admin')}>Admin</NavLink>
@@ -172,7 +178,9 @@
 	</div>
 
 	{#if isMenuOpen}
-		<nav class="absolute top-full left-0 z-50 w-full border-t border-[#172420]/8 bg-[#ECF0E9] shadow-[0_25px_60px_-35px_rgba(23,36,32,0.35)] xl:hidden">
+		<nav
+			class="absolute top-full left-0 z-50 w-full border-t border-[#172420]/8 bg-[#ECF0E9] shadow-[0_25px_60px_-35px_rgba(23,36,32,0.35)] xl:hidden"
+		>
 			<div class="mx-auto max-w-7xl px-4 py-4">
 				<div class="pb-3">
 					<a
@@ -186,13 +194,31 @@
 
 				<div class="space-y-1">
 					{#each navItems as item (item.href)}
-						<MobileNavLink href={item.href} active={isActive(item.href)} onclick={() => (isMenuOpen = false)}>
+						<MobileNavLink
+							href={item.href}
+							active={isActive(item.href)}
+							onclick={() => (isMenuOpen = false)}
+						>
 							{item.label}
 						</MobileNavLink>
 					{/each}
 
+					{#if $userStore}
+						<MobileNavLink
+							href="/profil"
+							active={isActive('/profil')}
+							onclick={() => (isMenuOpen = false)}
+						>
+							Min profil
+						</MobileNavLink>
+					{/if}
+
 					{#if $userStore && hasRole($userStore, 'Admin')}
-						<MobileNavLink href="/admin" active={isActive('/admin')} onclick={() => (isMenuOpen = false)}>
+						<MobileNavLink
+							href="/admin"
+							active={isActive('/admin')}
+							onclick={() => (isMenuOpen = false)}
+						>
 							Admin
 						</MobileNavLink>
 					{/if}

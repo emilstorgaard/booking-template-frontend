@@ -9,6 +9,8 @@ export interface TimeSlot {
     notes: string | null;
     bookedByUserId: number | null;
     bookedByUserEmail: string | null;
+    createdAtUtc: string;
+    updatedAtUtc: string;
 }
 
 export interface CreateTimeSlotRequest {
@@ -45,8 +47,6 @@ async function handleResponse<T>(response: Response): Promise<T> {
     return response.json();
 }
 
-// ---- User: booking ----
-
 export async function getAvailableSlots(): Promise<TimeSlot[]> {
     const response = await fetch(`${API_BASE_URL}/timeslots/available`, {
         headers: authHeaders()
@@ -77,17 +77,15 @@ export async function cancelBooking(id: number): Promise<void> {
     return handleResponse(response);
 }
 
-// ---- Admin: administrer ledige tider ----
-
 export async function getAllTimeSlots(): Promise<TimeSlot[]> {
-    const response = await fetch(`${API_BASE_URL}/admin/timeslots`, {
+    const response = await fetch(`${API_BASE_URL}/timeslots`, {
         headers: authHeaders()
     });
     return handleResponse(response);
 }
 
 export async function createTimeSlot(dto: CreateTimeSlotRequest): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/admin/timeslots`, {
+    const response = await fetch(`${API_BASE_URL}/timeslots`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(dto)
@@ -96,7 +94,7 @@ export async function createTimeSlot(dto: CreateTimeSlotRequest): Promise<{ mess
 }
 
 export async function createBulkTimeSlots(dto: CreateBulkTimeSlotsRequest): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/admin/timeslots/bulk`, {
+    const response = await fetch(`${API_BASE_URL}/timeslots/bulk`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(dto)
@@ -104,8 +102,32 @@ export async function createBulkTimeSlots(dto: CreateBulkTimeSlotsRequest): Prom
     return handleResponse(response);
 }
 
+export async function updateTimeSlot(id: number, dto: CreateTimeSlotRequest): Promise<{ message: string }> {
+    const response = await fetch(`${API_BASE_URL}/timeslots/${id}`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify(dto)
+    });
+    return handleResponse(response);
+}
+
 export async function deleteTimeSlot(id: number): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/admin/timeslots/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/timeslots/${id}`, {
+        method: "DELETE",
+        headers: authHeaders()
+    });
+    return handleResponse(response);
+}
+
+export async function getBookingsByUser(userId: number): Promise<TimeSlot[]> {
+    const response = await fetch(`${API_BASE_URL}/bookings/user/${userId}`, {
+        headers: authHeaders()
+    });
+    return handleResponse(response);
+}
+
+export async function adminCancelBooking(id: number): Promise<{ message: string }> {
+    const response = await fetch(`${API_BASE_URL}/bookings/${id}/admin`, {
         method: "DELETE",
         headers: authHeaders()
     });

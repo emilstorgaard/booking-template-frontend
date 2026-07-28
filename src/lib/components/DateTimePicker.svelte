@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
+
 	let {
 		value = $bindable(''),
 		required = false,
@@ -9,7 +11,18 @@
 	let hour = $state('');
 	let minute = $state('');
 
-	// Værdien parent'en ser er altid "YYYY-MM-DDTHH:mm" (samme format som datetime-local gav)
+	$effect(() => {
+		if (!value) return;
+		const [d, t] = value.split('T');
+		if (!d || !t) return;
+		const [h, m] = t.split(':');
+		untrack(() => {
+			if (d !== date) date = d;
+			if (h !== hour) hour = h;
+			if (m !== minute) minute = m;
+		});
+	});
+
 	$effect(() => {
 		value = date && hour !== '' && minute !== '' ? `${date}T${hour}:${minute}` : '';
 	});

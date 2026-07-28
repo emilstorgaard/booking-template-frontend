@@ -9,7 +9,6 @@ export interface JwtClaims {
 export function decodeJwtPayload(token: string): JwtClaims | null {
 	try {
 		const payload = token.split('.')[1];
-		// base64url -> base64
 		const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
 		const json = decodeURIComponent(
 			atob(base64)

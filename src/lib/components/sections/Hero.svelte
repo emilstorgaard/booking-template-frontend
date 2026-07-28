@@ -12,7 +12,6 @@
 		aria-hidden="true"
 	></div>
 
-	<!-- signatur: én ubrudt linje, som en bevægelsesfrase tegnet i luften -->
 	<svg
 		viewBox="0 0 1000 420"
 		preserveAspectRatio="none"
