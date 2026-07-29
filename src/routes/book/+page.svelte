@@ -84,8 +84,13 @@
 		}
 	}
 
+	function parseAsUtc(iso: string): Date {
+		const hasTimezoneInfo = /Z$|[+-]\d{2}:?\d{2}$/.test(iso);
+		return new Date(hasTimezoneInfo ? iso : `${iso}Z`);
+	}
+
 	function formatTime(iso: string): string {
-		return new Date(iso).toLocaleString('da-DK', {
+		return parseAsUtc(iso).toLocaleString('da-DK', {
 			weekday: 'short',
 			day: 'numeric',
 			month: 'short',

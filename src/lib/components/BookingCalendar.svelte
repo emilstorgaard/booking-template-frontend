@@ -29,15 +29,20 @@
 		return dateKey(a) === dateKey(b);
 	}
 
+	function parseAsUtc(iso: string): Date {
+		const hasTimezoneInfo = /Z$|[+-]\d{2}:?\d{2}$/.test(iso);
+		return new Date(hasTimezoneInfo ? iso : `${iso}Z`);
+	}
+
 	let slotsByDay = $derived.by(() => {
 		const map = new Map<string, TimeSlot[]>();
 		for (const slot of slots) {
-			const key = dateKey(new Date(slot.startTimeUtc));
+			const key = dateKey(parseAsUtc(slot.startTimeUtc));
 			if (!map.has(key)) map.set(key, []);
 			map.get(key)!.push(slot);
 		}
 		for (const list of map.values()) {
-			list.sort((a, b) => new Date(a.startTimeUtc).getTime() - new Date(b.startTimeUtc).getTime());
+			list.sort((a, b) => parseAsUtc(a.startTimeUtc).getTime() - parseAsUtc(b.startTimeUtc).getTime());
 		}
 		return map;
 	});
@@ -86,7 +91,7 @@
 	}
 
 	function formatTime(iso: string): string {
-		return new Date(iso).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
+		return parseAsUtc(iso).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
 	}
 
 	function formatSelectedDate(): string {
@@ -106,11 +111,11 @@
 	});
 
 	function formatTimeRange(slot: TimeSlot): string {
-		const start = new Date(slot.startTimeUtc).toLocaleTimeString('da-DK', {
+		const start = parseAsUtc(slot.startTimeUtc).toLocaleTimeString('da-DK', {
 			hour: '2-digit',
 			minute: '2-digit'
 		});
-		const end = new Date(slot.endTimeUtc).toLocaleTimeString('da-DK', {
+		const end = parseAsUtc(slot.endTimeUtc).toLocaleTimeString('da-DK', {
 			hour: '2-digit',
 			minute: '2-digit'
 		});
