@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
+	import { untrack } from 'svelte';
 	import type { FaqItem } from '$lib/types/content';
 
 	let { items }: { items: FaqItem[] } = $props();
-	let openId = $state<string | null>(items[0]?.id ?? null);
+	let openId = $state<string | null>(untrack(() => items[0]?.id ?? null));
 
 	function toggle(id: string) {
 		openId = openId === id ? null : id;

@@ -14,6 +14,10 @@
 	let loading = $state(true);
 	let pendingId = $state<number | null>(null);
 
+	function autofocusAction(node: HTMLElement) {
+		node.focus();
+	}
+
 	async function loadBookings() {
 		if (!$userStore) {
 			bookings = [];
@@ -333,7 +337,7 @@
 									<input
 										type="email"
 										bind:value={editedEmail}
-										autofocus
+										use:autofocusAction
 										class="w-full rounded-xl border border-[#172420]/15 bg-[#ECF0E9]/60 px-4 py-2.5 text-sm text-[#172420] outline-none transition focus:border-[#96392C]/50 focus:ring-2 focus:ring-[#96392C]/15 sm:max-w-xs"
 									/>
 									<div class="flex gap-2">
