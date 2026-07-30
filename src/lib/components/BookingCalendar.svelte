@@ -130,23 +130,27 @@
 				<button
 					onclick={prevMonth}
 					aria-label="Forrige måned"
-					class="flex h-9 w-9 items-center justify-center rounded-full text-[#46605A] transition hover:bg-[#172420]/5 hover:text-[#172420]"
+					class="flex h-9 w-9 items-center justify-center rounded-full border border-[#172420]/10 text-[#46605A] transition hover:border-[#172420]/20 hover:bg-[#172420]/5 hover:text-[#172420]"
 				>
-					‹
+					<svg viewBox="0 0 20 20" fill="none" class="h-4 w-4" aria-hidden="true">
+						<path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
 				</button>
 				<span class="font-['Instrument_Serif'] text-xl text-[#172420] italic capitalize">{monthLabel}</span>
 				<button
 					onclick={nextMonth}
 					aria-label="Næste måned"
-					class="flex h-9 w-9 items-center justify-center rounded-full text-[#46605A] transition hover:bg-[#172420]/5 hover:text-[#172420]"
+					class="flex h-9 w-9 items-center justify-center rounded-full border border-[#172420]/10 text-[#46605A] transition hover:border-[#172420]/20 hover:bg-[#172420]/5 hover:text-[#172420]"
 				>
-					›
+					<svg viewBox="0 0 20 20" fill="none" class="h-4 w-4" aria-hidden="true">
+						<path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
 				</button>
 			</div>
 
-			<div class="mt-5 grid grid-cols-7 gap-1 text-center text-[11px] font-medium tracking-wide text-[#46605A]/60 uppercase">
+			<div class="mt-5 grid grid-cols-7 gap-1 text-center">
 				{#each WEEKDAY_LABELS as label}
-					<span class="py-1">{label}</span>
+					<span class="py-1 font-['IBM_Plex_Mono'] text-[10px] font-medium tracking-wider text-[#46605A]/50 uppercase">{label}</span>
 				{/each}
 			</div>
 
@@ -156,22 +160,23 @@
 					<button
 						onclick={() => selectDay(cell)}
 						{disabled}
-						class="relative flex aspect-square flex-col items-center justify-center rounded-full text-sm transition
-							{!cell.inCurrentMonth ? 'text-[#172420]/25' : 'text-[#172420]'}
+						class="relative flex aspect-square flex-col items-center justify-center rounded-xl text-sm transition
+							{!cell.inCurrentMonth ? 'text-[#172420]/20' : 'text-[#172420]'}
 							{disabled ? 'cursor-default' : 'hover:bg-[#172420]/5'}
-							{selectedDateKey === cell.key ? 'bg-[#96392C] text-white hover:bg-[#96392C]' : ''}
+							{selectedDateKey === cell.key ? 'bg-[#96392C] font-semibold text-white hover:bg-[#96392C]' : ''}
 							{cell.isToday && selectedDateKey !== cell.key ? 'ring-1 ring-inset ring-[#96392C]/40' : ''}"
 					>
 						{cell.date.getDate()}
-						{#if cell.slotCount > 0}
-							<span class="mt-0.5 h-1 w-1 rounded-full {selectedDateKey === cell.key ? 'bg-white' : 'bg-[#96392C]'}"
+						{#if cell.slotCount > 0 && !cell.isPast}
+							<span
+								class="mt-0.5 h-1 w-1 rounded-full {selectedDateKey === cell.key ? 'bg-white/80' : 'bg-[#96392C]'}"
 							></span>
 						{/if}
 					</button>
 				{/each}
 			</div>
 
-			<p class="mt-4 flex items-center gap-1.5 text-[11px] tracking-wide text-[#46605A]/70 uppercase">
+			<p class="mt-4 flex items-center gap-1.5 font-['IBM_Plex_Mono'] text-[10px] tracking-wide text-[#46605A]/60 uppercase">
 				<span class="h-1.5 w-1.5 rounded-full bg-[#96392C]"></span>
 				Ledige tider
 			</p>
@@ -179,19 +184,29 @@
 
 		<div class="border-t border-[#172420]/8 p-5 sm:p-7 md:w-72 md:border-t-0 md:border-l">
 			{#if !selectedDateKey}
-				<p class="text-sm text-[#46605A]">Vælg en markeret dag for at se ledige tider.</p>
+				<div class="flex h-full flex-col items-center justify-center gap-3 py-8 text-center">
+					<div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#172420]/5 text-[#172420]/30">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-5 w-5">
+							<rect x="3.5" y="5" width="17" height="15.5" rx="3" stroke="currentColor" stroke-width="1.6" />
+							<path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6" />
+							<path d="M7.5 3V6.5M16.5 3V6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+						</svg>
+					</div>
+					<p class="text-sm text-[#46605A]">Vælg en markeret<br />dag for at se tider.</p>
+				</div>
 			{:else}
 				<h3 class="font-['Instrument_Serif'] text-xl text-[#172420] italic capitalize">{formatSelectedDate()}</h3>
 				{#if selectedDaySlots.length === 0}
-					<p class="mt-2 text-sm text-[#46605A]">Ingen ledige tider denne dag.</p>
+					<p class="mt-3 text-sm text-[#46605A]">Ingen ledige tider denne dag.</p>
 				{:else}
+					<p class="mt-1 font-['IBM_Plex_Mono'] text-[10px] text-[#46605A]/60">{selectedDaySlots.length} ledig{selectedDaySlots.length === 1 ? '' : 'e'} tid{selectedDaySlots.length === 1 ? '' : 'er'}</p>
 					<ul class="mt-4 flex flex-wrap gap-2">
 						{#each selectedDaySlots as slot (slot.id)}
 							<li>
 								<button
 									onclick={() => onBook(slot)}
 									disabled={pendingId === slot.id}
-									class="flex items-center gap-1.5 rounded-full border border-[#172420]/12 px-4 py-2 text-sm text-[#172420] transition hover:border-[#172420] hover:bg-[#172420] hover:text-white disabled:opacity-50"
+									class="inline-flex items-center gap-1.5 rounded-full border border-[#172420]/12 px-4 py-2 font-['IBM_Plex_Mono'] text-sm text-[#172420] transition hover:border-[#172420] hover:bg-[#172420] hover:text-white disabled:opacity-50"
 								>
 									{#if pendingId === slot.id}
 										<Spinner class="h-3.5 w-3.5" />

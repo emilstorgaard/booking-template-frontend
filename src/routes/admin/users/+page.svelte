@@ -98,7 +98,7 @@
 										{user.email}
 									</p>
 									<p class="mt-1 font-['IBM_Plex_Mono'] text-[11px] tracking-[0.08em] text-[#46605A] uppercase">
-										{user.role}
+										{user.roles.join(', ')}
 									</p>
 								</div>
 

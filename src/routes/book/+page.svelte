@@ -2,6 +2,7 @@
 	import SeoHead from '$lib/components/SeoHead.svelte';
 	import { userStore } from '$lib/stores/auth';
 	import { triggerToast } from '$lib/stores/toastStore';
+	import { openLoginModal } from '$lib/stores/modalStore';
 
 	let { data } = $props();
 
@@ -133,21 +134,29 @@
 <section class="bg-[#ECF0E9] px-4 pt-2 pb-20 sm:pb-24">
 	<div class="mx-auto max-w-3xl">
 		{#if $userStore && myBookings.length > 0}
-			<div class="mb-10">
-				<h2 class="text-[11px] font-semibold tracking-[0.24em] text-[#96392C] uppercase">Mine bookinger</h2>
-				<ul class="mt-4 grid gap-3 sm:grid-cols-2">
+			<div class="mb-10 overflow-hidden rounded-[28px] border border-[#172420]/8 bg-white shadow-[0_15px_40px_-25px_rgba(23,36,32,0.25)]">
+				<div class="flex items-center justify-between border-b border-[#172420]/6 px-6 py-4">
+					<p class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.2em] text-[#96392C] uppercase">
+						Mine bookinger
+					</p>
+					<span class="font-['IBM_Plex_Mono'] text-[10px] text-[#46605A]/60">{myBookings.length} aktiv{myBookings.length === 1 ? '' : 'e'}</span>
+				</div>
+				<ul class="divide-y divide-[#172420]/5">
 					{#each myBookings as slot (slot.id)}
-						<li
-							class="flex items-center justify-between gap-3 rounded-full border border-[#172420]/8 bg-white px-5 py-3 shadow-[0_15px_40px_-25px_rgba(23,36,32,0.35)]"
-						>
-							<span class="text-sm text-[#172420] capitalize">{formatTime(slot.startTimeUtc)}</span>
+						<li class="flex items-center justify-between gap-4 px-6 py-4">
+							<div class="min-w-0">
+								<p class="truncate text-sm font-medium text-[#172420] capitalize">
+									{new Date(slot.startTimeUtc + (slot.startTimeUtc.endsWith('Z') ? '' : 'Z')).toLocaleDateString('da-DK', { weekday: 'short', day: 'numeric', month: 'short' })}
+								</p>
+								<p class="mt-0.5 font-['IBM_Plex_Mono'] text-xs text-[#46605A]">{formatTime(slot.startTimeUtc)}</p>
+							</div>
 							<button
-								class="shrink-0 rounded-full border border-[#172420]/12 px-3.5 py-1.5 text-[13px] text-[#46605A] transition hover:border-[#96392C]/40 hover:bg-[#96392C]/5 hover:text-[#96392C] disabled:opacity-50"
+								class="shrink-0 rounded-full border border-[#96392C]/20 px-4 py-1.5 font-['IBM_Plex_Mono'] text-[11px] font-semibold text-[#96392C] transition hover:border-[#96392C]/40 hover:bg-[#96392C]/5 disabled:opacity-50"
 								disabled={pendingId === slot.id}
 								onclick={() => handleCancel(slot)}
 							>
 								{#if pendingId === slot.id}
-									<Spinner class="mr-1 inline h-3.5 w-3.5" />
+									<Spinner class="mr-1 inline h-3 w-3" />
 								{/if}
 								{pendingId === slot.id ? 'Aflyser…' : 'Aflys'}
 							</button>
@@ -157,24 +166,36 @@
 			</div>
 		{/if}
 
-		<div class="flex items-baseline justify-between">
-			<h2 class="text-[11px] font-semibold tracking-[0.24em] text-[#96392C] uppercase">Ledige tider</h2>
+		<div class="mb-6 flex items-center justify-between gap-4">
+			<p class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.2em] text-[#96392C] uppercase">Ledige tider</p>
 			{#if !$userStore}
-				<p class="text-[11px] tracking-wide text-[#46605A]/70 uppercase">Log ind for at booke</p>
+				<button
+					onclick={openLoginModal}
+					class="rounded-full border border-[#172420]/12 px-4 py-1.5 text-xs font-semibold text-[#172420] transition hover:bg-[#172420]/5"
+				>
+					Log ind for at booke
+				</button>
 			{/if}
 		</div>
 
 		{#if loading}
-			<div class="mt-5 flex items-center gap-2 text-sm text-[#46605A]">
-				<Spinner class="h-4 w-4 text-[#96392C]" />
-				Henter tider…
+			<div class="space-y-3">
+				{#each [1, 2] as _}
+					<div class="h-20 animate-pulse rounded-[28px] bg-[#172420]/5"></div>
+				{/each}
 			</div>
 		{:else if availableSlots.length === 0}
-			<p class="mt-5 text-sm text-[#46605A]">Der er ingen ledige tider lige nu — kig forbi igen snart.</p>
-		{:else}
-			<div class="mt-4">
-				<BookingCalendar slots={availableSlots} {pendingId} onBook={handleBook} />
+			<div class="flex flex-col items-center gap-4 rounded-[28px] border border-dashed border-[#172420]/15 py-16 text-center">
+				<div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#172420]/6 text-[#172420]/30">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-5 w-5">
+						<rect x="3.5" y="5" width="17" height="15.5" rx="3" stroke="currentColor" stroke-width="1.6" />
+						<path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6" />
+					</svg>
+				</div>
+				<p class="text-sm text-[#46605A]">Der er ingen ledige tider lige nu — kig forbi igen snart.</p>
 			</div>
+		{:else}
+			<BookingCalendar slots={availableSlots} {pendingId} onBook={handleBook} />
 		{/if}
 	</div>
 </section>

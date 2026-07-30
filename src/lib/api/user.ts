@@ -4,7 +4,9 @@ import { API_BASE_URL } from "../utils/config";
 export interface User {
     id: number;
     email: string;
-    role: string;
+    roles: string[];
+    createdAtUtc: string;
+    updatedAtUtc: string;
 }
 
 export interface UpdateUserRequest {

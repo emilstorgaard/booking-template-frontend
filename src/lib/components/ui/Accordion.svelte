@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition';
 	import type { FaqItem } from '$lib/types/content';
 
 	let { items }: { items: FaqItem[] } = $props();
@@ -9,16 +10,16 @@
 	}
 </script>
 
-<div class="space-y-3">
+<div class="space-y-2">
 	{#each items as item (item.id)}
-		<div class="overflow-hidden rounded-[24px] border border-[#172420]/8 bg-white">
+		<div class="overflow-hidden rounded-[24px] border border-[#172420]/8 bg-white transition hover:border-[#172420]/12">
 			<h3>
 				<button
 					type="button"
 					onclick={() => toggle(item.id)}
 					aria-expanded={openId === item.id}
 					aria-controls={`faq-panel-${item.id}`}
-					class="flex w-full items-center gap-4 px-6 py-4.5 text-left transition hover:bg-[#172420]/[0.02]"
+					class="flex w-full items-center gap-4 px-6 py-5 text-left transition"
 				>
 					<span class="flex-1 text-[15px] font-medium text-[#172420]">{item.question}</span>
 					<span
@@ -44,7 +45,11 @@
 				</button>
 			</h3>
 			{#if openId === item.id}
-				<div id={`faq-panel-${item.id}`} class="px-6 pt-0 pb-5 text-sm leading-relaxed text-[#46605A]">
+				<div
+					id={`faq-panel-${item.id}`}
+					transition:slide={{ duration: 200 }}
+					class="px-6 pt-0 pb-5 text-sm leading-relaxed text-[#46605A]"
+				>
 					{item.answer}
 				</div>
 			{/if}
