@@ -13,7 +13,7 @@
 
 <div class="space-y-2">
 	{#each items as item (item.id)}
-		<div class="overflow-hidden rounded-[24px] border border-[#172420]/8 bg-white transition hover:border-[#172420]/12">
+		<div class="overflow-hidden rounded-3xl border border-spruce/8 bg-white transition hover:border-spruce/12">
 			<h3>
 				<button
 					type="button"
@@ -22,11 +22,11 @@
 					aria-controls={`faq-panel-${item.id}`}
 					class="flex w-full items-center gap-4 px-6 py-5 text-left transition"
 				>
-					<span class="flex-1 text-[15px] font-medium text-[#172420]">{item.question}</span>
+					<span class="flex-1 text-[15px] font-medium text-spruce">{item.question}</span>
 					<span
 						class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors {openId === item.id
 							? 'bg-[#96392C] text-white'
-							: 'bg-[#172420]/5 text-[#46605A]'}"
+							: 'bg-spruce/5 text-[#46605A]'}"
 					>
 						<svg
 							class="h-3.5 w-3.5 transition-transform duration-200 {openId === item.id ? 'rotate-180' : ''}"

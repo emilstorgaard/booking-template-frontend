@@ -28,8 +28,10 @@
 	});
 
 	const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
-	const minutes = Array.from({ length: Math.ceil(60 / minuteStep) }, (_, i) =>
-		(i * minuteStep).toString().padStart(2, '0')
+	let minutes = $derived(
+		Array.from({ length: Math.ceil(60 / minuteStep) }, (_, i) =>
+			(i * minuteStep).toString().padStart(2, '0')
+		)
 	);
 
 	const fieldClass =

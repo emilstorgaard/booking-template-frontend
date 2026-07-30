@@ -142,7 +142,7 @@
 
 <div class="min-h-screen bg-[#ECF0E9]">
 
-	<section class="relative overflow-hidden border-b border-[#172420]/6">
+	<section class="relative overflow-hidden border-b border-spruce/6">
 		<div
 			class="pointer-events-none absolute inset-0"
 			aria-hidden="true"
@@ -153,7 +153,7 @@
 			<div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
 
 				<div
-					class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#172420] text-2xl font-semibold text-[#ECF0E9] shadow-[0_12px_32px_-12px_rgba(23,36,32,0.45)] sm:h-24 sm:w-24 sm:text-3xl"
+					class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-spruce text-2xl font-semibold text-[#ECF0E9] shadow-[0_12px_32px_-12px_rgba(23,36,32,0.45)] sm:h-24 sm:w-24 sm:text-3xl"
 				>
 					{#if $userStore?.email}
 						{$userStore.email[0].toUpperCase()}
@@ -164,14 +164,14 @@
 
 				<div class="min-w-0">
 					<span
-						class="inline-flex items-center gap-1.5 rounded-full border border-[#172420]/10 bg-white/80 px-3 py-1 font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.18em] text-[#46605A] uppercase backdrop-blur-sm"
+						class="inline-flex items-center gap-1.5 rounded-full border border-spruce/10 bg-white/80 px-3 py-1 font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.18em] text-[#46605A] uppercase backdrop-blur-sm"
 					>
 						<span class="h-1.5 w-1.5 rounded-full bg-[#46a074]"></span>
 						Logget ind
 					</span>
 
 					<h1
-						class="mt-3 font-['Instrument_Serif'] text-3xl leading-tight text-[#172420] italic sm:text-4xl"
+						class="mt-3 font-['Instrument_Serif'] text-3xl leading-tight text-spruce italic sm:text-4xl"
 					>
 						{#if $userStore}
 							{$userStore.email}
@@ -184,7 +184,7 @@
 						<div class="mt-2 flex flex-wrap gap-1.5">
 							{#each $userStore.roles as role}
 								<span
-									class="rounded-full border border-[#172420]/10 bg-white/70 px-2.5 py-0.5 font-['IBM_Plex_Mono'] text-[10px] font-medium tracking-[0.1em] text-[#46605A] uppercase"
+									class="rounded-full border border-spruce/10 bg-white/70 px-2.5 py-0.5 font-['IBM_Plex_Mono'] text-[10px] font-medium tracking-widest text-[#46605A] uppercase"
 								>
 									{role}
 								</span>
@@ -196,8 +196,8 @@
 
 			{#if !loading}
 				<div class="mt-10 flex flex-wrap gap-3">
-					<div class="flex items-center gap-3 rounded-2xl border border-[#172420]/8 bg-white/70 px-5 py-3.5 backdrop-blur-sm">
-						<div class="flex h-9 w-9 items-center justify-center rounded-full bg-[#172420]/6 text-[#172420]">
+					<div class="flex items-center gap-3 rounded-2xl border border-spruce/8 bg-white/70 px-5 py-3.5 backdrop-blur-sm">
+						<div class="flex h-9 w-9 items-center justify-center rounded-full bg-spruce/6 text-spruce">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-4 w-4">
 								<rect x="3.5" y="5" width="17" height="15.5" rx="3" stroke="currentColor" stroke-width="1.6"/>
 								<path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6"/>
@@ -206,7 +206,7 @@
 						</div>
 						<div>
 							<p class="font-['IBM_Plex_Mono'] text-[10px] font-medium tracking-[0.12em] text-[#46605A]/70 uppercase">Bookinger</p>
-							<p class="mt-0.5 text-lg font-semibold leading-none text-[#172420]">{upcomingBookings.length}</p>
+							<p class="mt-0.5 text-lg font-semibold leading-none text-spruce">{upcomingBookings.length}</p>
 						</div>
 					</div>
 				</div>
@@ -222,7 +222,7 @@
 					<p class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.2em] text-[#96392C] uppercase">
 						Dine bookinger
 					</p>
-					<h2 class="mt-1.5 font-['Instrument_Serif'] text-2xl text-[#172420] italic sm:text-3xl">
+					<h2 class="mt-1.5 font-['Instrument_Serif'] text-2xl text-spruce italic sm:text-3xl">
 						Kommende tider
 					</h2>
 				</div>
@@ -232,14 +232,14 @@
 			{#if loading}
 				<div class="space-y-3">
 					{#each [1, 2, 3] as _}
-						<div class="h-24 animate-pulse rounded-[28px] bg-[#172420]/5"></div>
+						<div class="h-24 animate-pulse rounded-[28px] bg-spruce/5"></div>
 					{/each}
 				</div>
 			{:else if upcomingBookings.length === 0}
 				<div
-					class="flex flex-col items-center gap-5 rounded-[28px] border border-dashed border-[#172420]/15 bg-white/50 py-14 text-center"
+					class="flex flex-col items-center gap-5 rounded-[28px] border border-dashed border-spruce/15 bg-white/50 py-14 text-center"
 				>
-					<div class="flex h-14 w-14 items-center justify-center rounded-full bg-[#172420]/6 text-[#172420]/40">
+					<div class="flex h-14 w-14 items-center justify-center rounded-full bg-spruce/6 text-spruce/40">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-6 w-6">
 							<rect x="3.5" y="5" width="17" height="15.5" rx="3" stroke="currentColor" stroke-width="1.6"/>
 							<path d="M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.6"/>
@@ -249,7 +249,7 @@
 						</svg>
 					</div>
 					<div>
-						<p class="font-medium text-[#172420]">Ingen kommende bookinger</p>
+						<p class="font-medium text-spruce">Ingen kommende bookinger</p>
 						<p class="mt-1 text-sm text-[#46605A]">Du har ikke booket nogen tider endnu.</p>
 					</div>
 					<Button href="/book" size="sm">Find en ledig tid</Button>
@@ -258,29 +258,29 @@
 				<ol class="space-y-3">
 					{#each upcomingBookings as slot (slot.id)}
 						<li
-							class="group flex items-center gap-4 rounded-[28px] border border-[#172420]/8 bg-white p-5 shadow-[0_8px_30px_-15px_rgba(23,36,32,0.2)] transition hover:border-[#172420]/15 hover:shadow-[0_12px_40px_-15px_rgba(23,36,32,0.28)] sm:p-6"
+							class="group flex items-center gap-4 rounded-[28px] border border-spruce/8 bg-white p-5 shadow-[0_8px_30px_-15px_rgba(23,36,32,0.2)] transition hover:border-spruce/15 hover:shadow-[0_12px_40px_-15px_rgba(23,36,32,0.28)] sm:p-6"
 						>
-							<div class="hidden shrink-0 flex-col items-center rounded-2xl bg-[#172420]/5 px-4 py-3 text-center sm:flex">
-								<span class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.1em] text-[#46605A] uppercase">
+							<div class="hidden shrink-0 flex-col items-center rounded-2xl bg-spruce/5 px-4 py-3 text-center sm:flex">
+								<span class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-widest text-[#46605A] uppercase">
 									{new Date(slot.startTimeUtc + (slot.startTimeUtc.endsWith('Z') ? '' : 'Z')).toLocaleDateString('da-DK', { month: 'short' })}
 								</span>
-								<span class="mt-0.5 font-['Instrument_Serif'] text-2xl leading-none text-[#172420] italic">
+								<span class="mt-0.5 font-['Instrument_Serif'] text-2xl leading-none text-spruce italic">
 									{new Date(slot.startTimeUtc + (slot.startTimeUtc.endsWith('Z') ? '' : 'Z')).getDate()}
 								</span>
 							</div>
 
 							<div class="min-w-0 flex-1">
-								<p class="font-medium text-[#172420] capitalize sm:hidden">
+								<p class="font-medium text-spruce capitalize sm:hidden">
 									{formatDate(slot.startTimeUtc)}
 								</p>
-								<p class="hidden font-medium text-[#172420] sm:block">
+								<p class="hidden font-medium text-spruce sm:block">
 									{new Date(slot.startTimeUtc + (slot.startTimeUtc.endsWith('Z') ? '' : 'Z')).toLocaleDateString('da-DK', { weekday: 'long' })}
 								</p>
 								<p class="mt-0.5 font-['IBM_Plex_Mono'] text-sm text-[#46605A]">
 									{formatTimeRange(slot.startTimeUtc, slot.endTimeUtc)}
 								</p>
 								{#if slot.notes}
-									<p class="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-[#172420]/8 bg-[#172420]/4 px-2.5 py-0.5 text-xs text-[#46605A]">
+									<p class="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-spruce/8 bg-spruce/4 px-2.5 py-0.5 text-xs text-[#46605A]">
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-3 w-3"><path d="M7 8h10M7 12h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/></svg>
 										{slot.notes}
 									</p>
@@ -313,16 +313,16 @@
 				<p class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.2em] text-[#96392C] uppercase">
 					Konto
 				</p>
-				<h2 class="mt-1.5 font-['Instrument_Serif'] text-2xl text-[#172420] italic sm:text-3xl">
+				<h2 class="mt-1.5 font-['Instrument_Serif'] text-2xl text-spruce italic sm:text-3xl">
 					Kontoindstillinger
 				</h2>
 			</div>
 
-			<div class="overflow-hidden rounded-[28px] border border-[#172420]/8 bg-white shadow-[0_8px_30px_-15px_rgba(23,36,32,0.2)]">
+			<div class="overflow-hidden rounded-[28px] border border-spruce/8 bg-white shadow-[0_8px_30px_-15px_rgba(23,36,32,0.2)]">
 
-				<div class="border-b border-[#172420]/6 p-6">
+				<div class="border-b border-spruce/6 p-6">
 					<div class="flex items-start gap-4">
-						<div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#172420]/6 text-[#172420]">
+						<div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-spruce/6 text-spruce">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-4 w-4">
 								<rect x="3" y="6" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
 								<path d="M3 9l9 5.5L21 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -338,13 +338,13 @@
 										type="email"
 										bind:value={editedEmail}
 										use:autofocusAction
-										class="w-full rounded-xl border border-[#172420]/15 bg-[#ECF0E9]/60 px-4 py-2.5 text-sm text-[#172420] outline-none transition focus:border-[#96392C]/50 focus:ring-2 focus:ring-[#96392C]/15 sm:max-w-xs"
+										class="w-full rounded-xl border border-spruce/15 bg-[#ECF0E9]/60 px-4 py-2.5 text-sm text-spruce outline-none transition focus:border-[#96392C]/50 focus:ring-2 focus:ring-[#96392C]/15 sm:max-w-xs"
 									/>
 									<div class="flex gap-2">
 										<button
 											onclick={handleSaveEmail}
 											disabled={isSavingEmail}
-											class="inline-flex items-center gap-1.5 rounded-full bg-[#172420] px-5 py-2 text-sm font-semibold text-[#ECF0E9] transition hover:bg-[#46605A] disabled:opacity-50"
+											class="inline-flex items-center gap-1.5 rounded-full bg-spruce px-5 py-2 text-sm font-semibold text-[#ECF0E9] transition hover:bg-[#46605A] disabled:opacity-50"
 										>
 											{#if isSavingEmail}
 												<Spinner class="h-3.5 w-3.5" />
@@ -354,7 +354,7 @@
 										<button
 											onclick={() => (isEditingEmail = false)}
 											disabled={isSavingEmail}
-											class="rounded-full border border-[#172420]/12 px-4 py-2 text-sm text-[#46605A] transition hover:bg-[#172420]/5"
+											class="rounded-full border border-spruce/12 px-4 py-2 text-sm text-[#46605A] transition hover:bg-spruce/5"
 										>
 											Annullér
 										</button>
@@ -362,12 +362,12 @@
 								</div>
 							{:else}
 								<div class="mt-1.5 flex items-center justify-between gap-4">
-									<p class="truncate font-['Instrument_Serif'] text-lg text-[#172420] italic">
+									<p class="truncate font-['Instrument_Serif'] text-lg text-spruce italic">
 										{$userStore?.email}
 									</p>
 									<button
 										onclick={() => (isEditingEmail = true)}
-										class="shrink-0 rounded-full border border-[#172420]/12 px-4 py-1.5 font-['IBM_Plex_Mono'] text-[11px] font-semibold tracking-[0.08em] text-[#172420] transition hover:bg-[#172420]/5"
+										class="shrink-0 rounded-full border border-spruce/12 px-4 py-1.5 font-['IBM_Plex_Mono'] text-[11px] font-semibold tracking-[0.08em] text-spruce transition hover:bg-spruce/5"
 									>
 										Redigér
 									</button>
@@ -379,7 +379,7 @@
 
 				<div class="px-6 py-5">
 					<div class="flex items-center gap-4">
-						<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#172420]/6 text-[#172420]">
+						<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-spruce/6 text-spruce">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-4 w-4">
 								<circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/>
 								<path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -387,7 +387,7 @@
 						</div>
 						<div>
 							<p class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.14em] text-[#46605A]/70 uppercase">Brugertype</p>
-							<p class="mt-0.5 text-sm text-[#172420]">
+							<p class="mt-0.5 text-sm text-spruce">
 								{$userStore?.roles?.includes('Admin') ? 'Administrator' : 'Bruger'}
 							</p>
 						</div>
@@ -411,7 +411,7 @@
 				<div class="p-6">
 					<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 						<div class="max-w-sm">
-							<p class="font-medium text-[#172420]">Slet konto permanent</p>
+							<p class="font-medium text-spruce">Slet konto permanent</p>
 							<p class="mt-1 text-sm leading-relaxed text-[#46605A]">
 								Alle dine bookinger frigives, og kontoen kan ikke gendannes. Vær sikker før du fortsætter.
 							</p>
@@ -432,7 +432,7 @@
 									<button
 										onclick={() => (showDeleteConfirm = false)}
 										disabled={isDeleting}
-										class="rounded-full border border-[#172420]/12 px-4 py-2.5 text-sm text-[#46605A] transition hover:bg-[#172420]/5"
+										class="rounded-full border border-spruce/12 px-4 py-2.5 text-sm text-[#46605A] transition hover:bg-spruce/5"
 									>
 										Annullér
 									</button>
