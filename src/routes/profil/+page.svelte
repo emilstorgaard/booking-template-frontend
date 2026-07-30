@@ -256,7 +256,6 @@
 						<li
 							class="group flex items-center gap-4 rounded-[28px] border border-[#172420]/8 bg-white p-5 shadow-[0_8px_30px_-15px_rgba(23,36,32,0.2)] transition hover:border-[#172420]/15 hover:shadow-[0_12px_40px_-15px_rgba(23,36,32,0.28)] sm:p-6"
 						>
-							<!-- Date accent block -->
 							<div class="hidden shrink-0 flex-col items-center rounded-2xl bg-[#172420]/5 px-4 py-3 text-center sm:flex">
 								<span class="font-['IBM_Plex_Mono'] text-[10px] font-semibold tracking-[0.1em] text-[#46605A] uppercase">
 									{new Date(slot.startTimeUtc + (slot.startTimeUtc.endsWith('Z') ? '' : 'Z')).toLocaleDateString('da-DK', { month: 'short' })}

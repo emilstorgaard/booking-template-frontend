@@ -6,7 +6,6 @@
 
 <SeoHead seo={{ metaTitle: 'Om os', metaDescription: 'Lær mere om os, og hvem der står bag.' }} />
 
-<!-- Hero -->
 <div class="relative overflow-hidden bg-[#ECF0E9]">
 	<div
 		class="pointer-events-none absolute -top-[15%] right-[-8%] h-[380px] w-[380px] rounded-full"
@@ -32,7 +31,6 @@
 	</div>
 </div>
 
-<!-- Mission strip -->
 <div class="border-y border-[#172420]/6 bg-white">
 	<div class="mx-auto max-w-3xl px-4 py-10">
 		<blockquote class="font-['Instrument_Serif'] text-2xl leading-snug text-[#172420] italic sm:text-3xl">
@@ -41,7 +39,6 @@
 	</div>
 </div>
 
-<!-- Team -->
 <section class="bg-[#ECF0E9] px-4 pt-14 pb-24">
 	<div class="mx-auto max-w-5xl">
 		<div class="flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">

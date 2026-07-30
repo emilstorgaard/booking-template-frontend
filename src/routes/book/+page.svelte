@@ -65,7 +65,6 @@
 			triggerToast(`Du har booket tiden ${formatTime(slot.startTimeUtc)}.`, 'success');
 			await loadData();
 		} catch (err) {
-			// Backend returnerer 409 hvis en anden bruger nåede tiden først
 			triggerToast(err instanceof Error ? err.message : 'Kunne ikke booke tiden.', 'error');
 		} finally {
 			pendingId = null;
@@ -103,7 +102,7 @@
 	onMount(loadData);
 
 	$effect(() => {
-		$userStore; // registrerer afhængigheden
+		$userStore;
 		loadMyBookings();
 	});
 </script>
