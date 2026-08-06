@@ -1,7 +1,6 @@
-import { PUBLIC_UMBRACO_URL } from '$env/static/public';
 import type { UmbracoMedia } from '$lib/types/umbraco';
 
-const BASE_URL = `${PUBLIC_UMBRACO_URL}/umbraco/delivery/api/v2`;
+const BASE_URL = `https://cms.emilstorgaard.dk/umbraco/delivery/api/v2`;
 
 export async function getContentByPath(path: string, fetchFn: typeof fetch = fetch) {
   const url = `${BASE_URL}/content/item/${path}`;
@@ -21,7 +20,7 @@ export function getMediaUrl(
   format: 'webp' | 'jpg' = 'webp'
 ): string {
   if (!relativeUrl) return '';
-  const base = relativeUrl.startsWith('http') ? relativeUrl : `${PUBLIC_UMBRACO_URL}${relativeUrl}`;
+  const base = relativeUrl.startsWith('http') ? relativeUrl : `https://cms.emilstorgaard.dk${relativeUrl}`;
   return withParams ? `${base}?width=${width}&format=${format}&quality=75` : base;
 }
 
